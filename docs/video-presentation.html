@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DB Hub — Demo Presentation</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; overflow: hidden; background: #030712; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: #f1f5f9; }
+
+    /* Slides */
+    #slides { width: 100%; height: 100%; position: relative; }
+    .slide {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column; justify-content: center; align-items: center;
+      padding: 60px 80px;
+      opacity: 0; transform: translateX(60px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+      pointer-events: none;
+    }
+    .slide.active { opacity: 1; transform: translateX(0); pointer-events: all; }
+    .slide.exit { opacity: 0; transform: translateX(-60px); }
+
+    /* Typography */
+    .label { font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 16px; }
+    .headline { font-size: clamp(32px, 5vw, 64px); font-weight: 900; line-height: 1.1; margin-bottom: 20px; }
+    .sub { font-size: clamp(14px, 1.8vw, 20px); color: #94a3b8; line-height: 1.6; max-width: 800px; text-align: center; }
+    .accent-violet { color: #a78bfa; }
+    .accent-emerald { color: #34d399; }
+    .accent-red { color: #f87171; }
+    .accent-amber { color: #fbbf24; }
+
+    /* Cards */
+    .card-row { display: flex; gap: 20px; width: 100%; max-width: 1000px; margin-top: 32px; }
+    .card {
+      flex: 1; background: #111827; border: 1px solid #1f2937;
+      border-radius: 16px; padding: 24px;
+    }
+    .card-label { font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 12px; }
+    .card ul { list-style: none; }
+    .card ul li { font-size: 13px; color: #94a3b8; padding: 5px 0; display: flex; gap: 8px; }
+    .card ul li::before { content: '→'; color: #6d28d9; flex-shrink: 0; }
+    .narration-box { border-color: #4c1d95; }
+    .narration-box p { font-size: 14px; color: #e2e8f0; line-height: 1.7; font-style: italic; margin-bottom: 10px; }
+
+    /* Stats */
+    .stat-row { display: flex; gap: 24px; margin-top: 32px; }
+    .stat { flex: 1; text-align: center; background: #111827; border: 1px solid #1f2937; border-radius: 16px; padding: 28px; }
+    .stat-num { font-size: clamp(36px, 5vw, 60px); font-weight: 900; }
+    .stat-label { font-size: 12px; color: #6b7280; margin-top: 6px; }
+
+    /* Code block */
+    .code-block { background: #0f172a; border: 1px solid #1e3a5f; border-radius: 12px; padding: 20px 24px; font-family: 'Courier New', monospace; font-size: 15px; color: #34d399; margin-top: 16px; }
+
+    /* Badge */
+    .badge { display: inline-flex; align-items: center; gap: 8px; background: #1e1b4b; border: 1px solid #3730a3; border-radius: 100px; padding: 6px 16px; font-size: 12px; color: #a5b4fc; margin-bottom: 24px; }
+    .dot { width: 6px; height: 6px; border-radius: 50%; background: #818cf8; animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(0.8)} }
+
+    /* Glow */
+    .glow { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 700px; height: 350px; background: radial-gradient(ellipse, rgba(99,102,241,0.12), transparent 70%); pointer-events: none; z-index: 0; }
+    .slide > * { position: relative; z-index: 1; }
+
+    /* Grid BG */
+    .grid-bg { position: absolute; inset: 0; background-image: linear-gradient(rgba(99,102,241,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(99,102,241,0.04) 1px, transparent 1px); background-size: 60px 60px; }
+
+    /* Controls */
+    #controls {
+      position: fixed; bottom: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(3,7,18,0.95); border-top: 1px solid #1f2937;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 12px 32px; backdrop-filter: blur(8px);
+    }
+    #controls button {
+      background: #1f2937; border: 1px solid #374151; color: #d1d5db;
+      border-radius: 8px; padding: 7px 18px; font-size: 12px; cursor: pointer;
+      transition: background 0.2s;
+    }
+    #controls button:hover { background: #374151; }
+    #controls button.primary { background: #7c3aed; border-color: #7c3aed; color: white; }
+    #controls button.primary:hover { background: #6d28d9; }
+    #progress-bar { height: 2px; background: #7c3aed; transition: width 0.3s; }
+    #slide-num { font-size: 12px; color: #6b7280; }
+    .ctrl-group { display: flex; gap: 8px; align-items: center; }
+
+    /* Voice indicator */
+    #voice-indicator { display: flex; align-items: center; gap: 8px; font-size: 11px; color: #6b7280; }
+    .voice-dot { width: 8px; height: 8px; border-radius: 50%; background: #374151; }
+    .voice-dot.speaking { background: #34d399; animation: pulse 0.8s infinite; }
+
+    /* Pricing cards */
+    .price-card { background: #111827; border: 1px solid #1f2937; border-radius: 16px; padding: 24px; text-align: center; flex: 1; }
+    .price-card.popular { border-color: #7c3aed; }
+    .price-num { font-size: 40px; font-weight: 900; color: white; }
+    .price-tier { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #6b7280; margin-bottom: 8px; }
+    .price-desc { font-size: 11px; color: #4b5563; margin-top: 6px; }
+  </style>
+</head>
+<body>
+
+<div id="slides">
+
+  <!-- ─── SLIDE 1: Title / Hook ─── -->
+  <div class="slide active" data-duration="8000" data-narration="Your database is slow. Something is running for 8 seconds. You know it. Your users know it. But figuring out exactly which query is the problem, and what's causing it — that takes time you don't have. I'm going to show you how D B Hub finds it and fixes it in under 3 minutes.">
+    <div class="grid-bg"></div>
+    <div class="glow"></div>
+    <div class="badge"><div class="dot"></div> Self-hosted · No cloud · Your data stays on your server</div>
+    <div class="label accent-violet">DB Hub — Demo</div>
+    <h1 class="headline" style="text-align:center">
+      Your database is slow.<br/>
+      <span class="accent-violet">Find the query in 60 seconds.</span>
+    </h1>
+    <p class="sub">8 professional modules · PostgreSQL · SQL Server · MySQL · One-time license</p>
+  </div>
+
+  <!-- ─── SLIDE 2: The Problem ─── -->
+  <div class="slide" data-duration="9000" data-narration="Most teams are juggling five different tools for the same database. One for schema browsing. Another for documentation. A third for query analysis. A fourth for E R diagrams. None of them talk to each other. And most of them send your query plans to someone else's cloud. D B Hub is one platform — eight modules, one connection, everything stays on your server.">
+    <div class="glow"></div>
+    <div class="label accent-red">The Problem</div>
+    <h1 class="headline" style="text-align:center">
+      Too many tools.<br/><span class="accent-red">None of them on your server.</span>
+    </h1>
+    <div class="card-row">
+      <div class="card">
+        <div class="card-label" style="color:#f87171">What teams deal with</div>
+        <ul>
+          <li>5 different tools for the same database</li>
+          <li>Each needs its own connection setup</li>
+          <li>Schema data uploaded to cloud SaaS tools</li>
+          <li>No single view of your database health</li>
+          <li>Per-seat, per-month pricing that adds up</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-label" style="color:#34d399">DB Hub changes this</div>
+        <ul>
+          <li>8 modules — one install, one login</li>
+          <li>Connect once — all modules share it</li>
+          <li>Runs entirely on your own server</li>
+          <li>Zero data leaves your network</li>
+          <li>$199 one-time — no subscription</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── SLIDE 3: Open DB Hub ─── -->
+  <div class="slide" data-duration="7000" data-narration="Let me open D B Hub. It's running on my local server — just a browser tab. I'll log in with my credentials. The dashboard loads — you can see the 8 module cards. Schema browser, connections, A I docs, E R diagram, change tracker, A I assistant, and the query optimizer. Let me go straight to the query optimizer to find that slow query.">
+    <div class="glow"></div>
+    <div class="label accent-violet">Step 1 — Open DB Hub</div>
+    <h1 class="headline" style="text-align:center">Login. Dashboard. <span class="accent-violet">8 modules ready.</span></h1>
+    <p class="sub" style="margin-bottom:32px">Runs in your browser. Installed on your server. Nothing leaves your network.</p>
+    <div class="card-row" style="max-width:700px">
+      <div class="card" style="text-align:center; padding: 32px">
+        <div style="font-size:48px;font-weight:900;color:#a78bfa;margin-bottom:8px">8</div>
+        <div style="font-size:13px;color:#6b7280">Modules included</div>
+      </div>
+      <div class="card" style="text-align:center; padding: 32px">
+        <div style="font-size:48px;font-weight:900;color:#34d399;margin-bottom:8px">3</div>
+        <div style="font-size:13px;color:#6b7280">Database engines</div>
+      </div>
+      <div class="card" style="text-align:center; padding: 32px">
+        <div style="font-size:48px;font-weight:900;color:#fbbf24;margin-bottom:8px">$0</div>
+        <div style="font-size:13px;color:#6b7280">Monthly fee</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── SLIDE 4: Slow Query Dashboard ─── -->
+  <div class="slide" data-duration="11000" data-narration="I'll open the Query Optimizer and go to the Slow Queries tab. This reads directly from pg underscore stat underscore statements — no agents, no configuration changes needed. Look at this top result. 8 thousand 3 hundred milliseconds mean execution time. Called 1 thousand 8 hundred times. This one query has consumed 15 thousand seconds of database time. That's our problem. Let me click Analyze to see why it's slow.">
+    <div class="glow"></div>
+    <div class="label accent-amber">Step 2 — Slow Query Dashboard</div>
+    <h1 class="headline" style="text-align:center">
+      There it is.<br/><span class="accent-red">8,342ms. 1,847 calls.</span>
+    </h1>
+    <div class="card-row">
+      <div class="card">
+        <div class="card-label" style="color:#fbbf24">Top offending query</div>
+        <div class="code-block" style="font-size:12px;color:#94a3b8">
+          SELECT * FROM orders o<br/>
+          JOIN customers c ON o.customer_id = c.id<br/>
+          WHERE o.status = 'pending'<br/>
+          ORDER BY o.created_at DESC
+        </div>
+        <div style="display:flex;gap:16px;margin-top:16px">
+          <div style="text-align:center">
+            <div style="font-size:28px;font-weight:900;color:#f87171">8,342ms</div>
+            <div style="font-size:11px;color:#6b7280">Mean time</div>
+          </div>
+          <div style="text-align:center">
+            <div style="font-size:28px;font-weight:900;color:#fbbf24">1,847</div>
+            <div style="font-size:11px;color:#6b7280">Calls</div>
+          </div>
+          <div style="text-align:center">
+            <div style="font-size:28px;font-weight:900;color:#f87171">15,415s</div>
+            <div style="font-size:11px;color:#6b7280">Total time</div>
+          </div>
+        </div>
+      </div>
+      <div class="card narration-box">
+        <div class="card-label" style="color:#a78bfa">Source</div>
+        <p style="font-size:13px;color:#94a3b8;line-height:1.7">Reads from <span style="color:#34d399;font-family:monospace">pg_stat_statements</span> — no agents needed.</p>
+        <p style="font-size:13px;color:#94a3b8;line-height:1.7;margin-top:8px">Works the same way with SQL Server DMVs and MySQL performance_schema.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── SLIDE 5: EXPLAIN Visualizer ─── -->
+  <div class="slide" data-duration="12000" data-narration="The EXPLAIN tab auto-populated with the query. I'll run it with ANALYZE to get actual execution times. The plan tree renders — and there's the problem. A Sequential Scan on the orders table. The database is reading 1 point 2 million rows to find the ones with status pending. No index on that column. D B Hub flags it with a warning automatically — you don't have to know what you're looking for. The actual execution time: 8 thousand 3 hundred milliseconds. Now let me go to the Index Advisor and get the fix.">
+    <div class="glow"></div>
+    <div class="label accent-amber">Step 3 — EXPLAIN Visualizer</div>
+    <h1 class="headline" style="text-align:center">
+      Sequential Scan.<br/><span class="accent-red">Reading 1.2 million rows.</span>
+    </h1>
+    <div class="card-row">
+      <div class="card">
+        <div class="card-label" style="color:#f87171">Plan tree — what DB Hub shows</div>
+        <div style="background:#0f172a;border-radius:12px;padding:20px;margin-top:8px">
+          <div style="background:#450a0a;border:1px solid #7f1d1d;border-radius:8px;padding:14px;margin-bottom:10px">
+            <div style="font-size:11px;color:#fca5a5;font-weight:700">⚠ Seq Scan on orders</div>
+            <div style="font-size:12px;color:#6b7280;margin-top:4px">Rows: 1,200,000 · Cost: 148,293</div>
+            <div style="font-size:12px;color:#f87171;margin-top:4px">Actual time: 8,314ms</div>
+          </div>
+          <div style="background:#052e16;border:1px solid #14532d;border-radius:8px;padding:14px">
+            <div style="font-size:11px;color:#86efac;font-weight:700">✓ Hash Join</div>
+            <div style="font-size:12px;color:#6b7280;margin-top:4px">customers table · rows: 12</div>
+          </div>
+        </div>
+      </div>
+      <div class="card narration-box">
+        <div class="card-label" style="color:#a78bfa">What this means</div>
+        <p style="font-size:13px;color:#e2e8f0;line-height:1.7">The database has no index on <span style="color:#fbbf24;font-family:monospace">orders.status</span> — so it reads every row in the table on every query call.</p>
+        <p style="font-size:13px;color:#e2e8f0;line-height:1.7;margin-top:8px">DB Hub automatically flags this with a warning. You don't need to read the raw JSON plan output.</p>
+        <div style="margin-top:16px;background:#1a0a2e;border:1px solid #4c1d95;border-radius:8px;padding:12px">
+          <div style="font-size:11px;color:#a78bfa;font-weight:700">DB Hub Warning</div>
+          <div style="font-size:12px;color:#c4b5fd;margin-top:4px">Sequential Scan detected — consider adding an index on the filter column</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── SLIDE 6: Index Advisor ─── -->
+  <div class="slide" data-duration="11000" data-narration="The Index Advisor reads my query's WHERE and ORDER BY clauses and infers exactly what indexes are missing. It also checks the catalog for foreign key columns with no indexes — a very common oversight. Here's the recommendation: a composite index on status and created at, descending — matching the ORDER BY exactly. This is ready to run. I'll copy it and apply it.">
+    <div class="glow"></div>
+    <div class="label accent-emerald">Step 4 — Index Advisor</div>
+    <h1 class="headline" style="text-align:center">
+      The fix.<br/><span class="accent-emerald">Ready to run.</span>
+    </h1>
+    <div class="card-row">
+      <div class="card">
+        <div class="card-label" style="color:#34d399">Recommendation from DB Hub</div>
+        <div style="margin-top:8px">
+          <div style="font-size:11px;color:#fbbf24;font-weight:700;margin-bottom:8px">INFERRED FROM WHERE + ORDER BY</div>
+          <div class="code-block">
+            CREATE INDEX idx_orders_status_created<br/>
+            ON orders (status, created_at DESC);
+          </div>
+        </div>
+        <div style="margin-top:16px">
+          <div style="font-size:11px;color:#f87171;font-weight:700;margin-bottom:8px">MISSING FK INDEXES (from catalog)</div>
+          <div class="code-block" style="font-size:13px">
+            CREATE INDEX idx_orders_customer_id<br/>
+            ON orders (customer_id);
+          </div>
+        </div>
+      </div>
+      <div class="card narration-box">
+        <div class="card-label" style="color:#a78bfa">How it works</div>
+        <p style="font-size:13px;color:#e2e8f0;line-height:1.7">Parses your WHERE and ORDER BY clauses to identify missing indexes.</p>
+        <p style="font-size:13px;color:#e2e8f0;line-height:1.7;margin-top:8px">Scans <span style="color:#34d399;font-family:monospace">information_schema</span> for FK columns with no covering index.</p>
+        <p style="font-size:13px;color:#e2e8f0;line-height:1.7;margin-top:8px">Generates ready-to-run DDL — just copy and run it in your database.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── SLIDE 7: The Result ─── -->
+  <div class="slide" data-duration="10000" data-narration="I ran the CREATE INDEX. Let me run EXPLAIN again on the same query. Index Scan. The database is now reading 12 rows instead of 1 point 2 million. Execution time: 94 milliseconds. Down from 8 thousand 3 hundred. That's a 98.9% reduction. Found in 2 minutes. Fixed with one index. This is what D B Hub is for.">
+    <div class="glow"></div>
+    <div class="label accent-emerald">The Result</div>
+    <h1 class="headline" style="text-align:center">
+      8,314ms <span style="color:#4b5563;font-weight:400">→</span> <span class="accent-emerald">94ms.</span>
+    </h1>
+    <p class="sub" style="margin-bottom:32px">One index. Found in 2 minutes. Fixed in 30 seconds.</p>
+    <div class="stat-row" style="max-width:800px">
+      <div class="stat" style="background:#1a0505;border-color:#7f1d1d">
+        <div class="stat-num accent-red">8,314ms</div>
+        <div class="stat-label">Before — Sequential Scan<br/>Reading 1,200,000 rows</div>
+      </div>
+      <div class="stat" style="background:#0a1a0a;border-color:#14532d">
+        <div class="stat-num accent-emerald">94ms</div>
+        <div class="stat-label">After — Index Scan<br/>Reading 12 rows</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num" style="color:#a78bfa">98.9%</div>
+        <div class="stat-label">Reduction in<br/>execution time</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── SLIDE 8: Other Modules ─── -->
+  <div class="slide" data-duration="12000" data-narration="That's just one of eight modules. The schema browser shows every table, column, index, and foreign key — live from the catalog, always current. The E R diagram renders your full relationship map visually — drag tables, follow FK lines. A I documentation generates a complete markdown doc for any table using Claude — one click, 5 seconds. The change tracker snapshots your schema over time and diffs any two points — catch migrations that went wrong. And the A I assistant lets you ask questions about your schema in plain English.">
+    <div class="glow"></div>
+    <div class="label accent-violet">8 Modules — Quick Tour</div>
+    <h1 class="headline" style="text-align:center">That's one of <span class="accent-violet">eight modules.</span></h1>
+    <div class="card-row">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;flex:1;max-width:900px">
+        <div class="card" style="padding:18px">
+          <div style="font-size:13px;font-weight:700;color:#818cf8;margin-bottom:6px">📋 Schema Browser</div>
+          <div style="font-size:12px;color:#6b7280">Every table, column, index, FK — live from the catalog</div>
+        </div>
+        <div class="card" style="padding:18px">
+          <div style="font-size:13px;font-weight:700;color:#a855f7;margin-bottom:6px">🗺 ER Diagram</div>
+          <div style="font-size:12px;color:#6b7280">Interactive visual schema map — drag tables, follow FK lines</div>
+        </div>
+        <div class="card" style="padding:18px">
+          <div style="font-size:13px;font-weight:700;color:#22d3ee;margin-bottom:6px">✨ AI Documentation</div>
+          <div style="font-size:12px;color:#6b7280">One click — Claude generates markdown docs for any table</div>
+        </div>
+        <div class="card" style="padding:18px">
+          <div style="font-size:13px;font-weight:700;color:#fb923c;margin-bottom:6px">📊 Change Tracker</div>
+          <div style="font-size:12px;color:#6b7280">Snapshot + diff your schema between any two points in time</div>
+        </div>
+        <div class="card" style="padding:18px">
+          <div style="font-size:13px;font-weight:700;color:#ec4899;margin-bottom:6px">🤖 AI Assistant</div>
+          <div style="font-size:12px;color:#6b7280">Ask "which tables have no indexes?" — get the answer instantly</div>
+        </div>
+        <div class="card" style="padding:18px">
+          <div style="font-size:13px;font-weight:700;color:#34d399;margin-bottom:6px">👥 Team Access</div>
+          <div style="font-size:12px;color:#6b7280">Multi-user with admin, editor, and viewer roles</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── SLIDE 9: Pricing ─── -->
+  <div class="slide" data-duration="12000" data-narration="D B Hub is self-hosted — it runs on your server, your data never leaves your network. No subscription. No per-seat pricing. SolarWinds D P A starts at 2 thousand dollars per year for the same diagnostics. Datadog database monitoring is 70 dollars per host per month. D B Hub is 199 dollars, one time. There's a 30-day money-back guarantee — if it doesn't work in your environment, full refund, no questions. The link is in the description below.">
+    <div class="glow"></div>
+    <div class="label accent-violet">Pricing</div>
+    <h1 class="headline" style="text-align:center">Pay once. <span class="accent-violet">Yours forever.</span></h1>
+    <p class="sub" style="margin-bottom:8px">SolarWinds DPA: <span style="color:#f87171;text-decoration:line-through">$2,000/year</span> · Datadog: <span style="color:#f87171;text-decoration:line-through">$70/host/month</span> · DB Hub: <span style="color:#34d399;font-weight:700">$199 one time</span></p>
+    <div class="card-row" style="max-width:800px;margin-top:24px">
+      <div class="price-card">
+        <div class="price-tier">Starter</div>
+        <div class="price-num">$199</div>
+        <div class="price-desc">1 server · up to 5 users</div>
+      </div>
+      <div class="price-card popular">
+        <div class="price-tier" style="color:#a78bfa">Team — Most Popular</div>
+        <div class="price-num">$399</div>
+        <div class="price-desc">1 server · unlimited users</div>
+      </div>
+      <div class="price-card">
+        <div class="price-tier">Business</div>
+        <div class="price-num">$699</div>
+        <div class="price-desc">Unlimited servers</div>
+      </div>
+    </div>
+    <div style="margin-top:24px;display:flex;align-items:center;gap:10px;background:#052e16;border:1px solid #14532d;border-radius:12px;padding:14px 24px">
+      <span style="font-size:20px">🛡</span>
+      <span style="font-size:13px;color:#86efac;font-weight:600">30-day money-back guarantee — if it doesn't work in your environment, full refund, no questions asked.</span>
+    </div>
+  </div>
+
+  <!-- ─── SLIDE 10: End ─── -->
+  <div class="slide" data-duration="6000" data-narration="DB Hub — 8 modules, 3 database engines, self-hosted, one-time license. Link in the description. Thank you for watching.">
+    <div class="grid-bg"></div>
+    <div class="glow"></div>
+    <div style="text-align:center">
+      <div style="font-size:80px;font-weight:900;background:linear-gradient(135deg,#a78bfa,#6366f1,#38bdf8);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:-2px;margin-bottom:16px">DB HUB</div>
+      <p style="font-size:18px;color:#94a3b8;margin-bottom:32px">8 modules · 3 databases · Self-hosted · One-time license</p>
+      <div style="display:flex;gap:24px;justify-content:center;font-size:13px;color:#6b7280">
+        <span>🔒 Your data never leaves your server</span>
+        <span>·</span>
+        <span>🛡 30-day guarantee</span>
+        <span>·</span>
+        <span>⚡ Starts at $199</span>
+      </div>
+      <p style="font-size:14px;color:#4c1d95;margin-top:32px;font-weight:600">Link in the description ↓</p>
+    </div>
+  </div>
+
+</div>
+
+<!-- ── Controls Bar ── -->
+<div id="controls">
+  <div class="ctrl-group">
+    <button onclick="prevSlide()">← Prev</button>
+    <button class="primary" id="playBtn" onclick="togglePlay()">▶ Play + Narrate</button>
+    <button onclick="nextSlide()">Next →</button>
+  </div>
+  <div style="flex:1;margin:0 24px">
+    <div style="height:2px;background:#1f2937;border-radius:2px;margin-bottom:6px">
+      <div id="progress-bar" style="width:0%;height:100%;background:#7c3aed;border-radius:2px;transition:width 0.3s"></div>
+    </div>
+    <div style="display:flex;justify-content:space-between">
+      <span id="slide-num" style="font-size:11px;color:#6b7280">Slide 1 / 10</span>
+      <span id="slide-title" style="font-size:11px;color:#6b7280"></span>
+    </div>
+  </div>
+  <div class="ctrl-group">
+    <div id="voice-indicator">
+      <div class="voice-dot" id="voiceDot"></div>
+      <span id="voiceLabel">Voice ready</span>
+    </div>
+    <button onclick="stopAll()" style="margin-left:12px">■ Stop</button>
+  </div>
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  let current = 0;
+  let playing = false;
+  let timer = null;
+  let speechTimer = null;
+
+  const titles = ['Hook','The Problem','Open DB Hub','Slow Query ★','EXPLAIN ★','Index Advisor ★','The Result ★','Other Modules','Pricing','End'];
+
+  function showSlide(n) {
+    slides.forEach((s, i) => {
+      s.classList.remove('active','exit');
+      if (i === n) s.classList.add('active');
+      else if (i === current) s.classList.add('exit');
+    });
+    current = n;
+    updateUI();
+  }
+
+  function updateUI() {
+    const pct = ((current) / (slides.length - 1)) * 100;
+    document.getElementById('progress-bar').style.width = pct + '%';
+    document.getElementById('slide-num').textContent = `Slide ${current+1} / ${slides.length}`;
+    document.getElementById('slide-title').textContent = titles[current] || '';
+  }
+
+  function nextSlide() {
+    if (current < slides.length - 1) showSlide(current + 1);
+    else { stopAll(); }
+  }
+
+  function prevSlide() {
+    stopSpeech();
+    clearTimeout(timer);
+    if (current > 0) showSlide(current - 1);
+  }
+
+  function togglePlay() {
+    if (playing) { stopAll(); }
+    else { startPlay(); }
+  }
+
+  function startPlay() {
+    playing = true;
+    document.getElementById('playBtn').textContent = '⏸ Pause';
+    speakAndAdvance();
+  }
+
+  function stopAll() {
+    playing = false;
+    document.getElementById('playBtn').textContent = '▶ Play + Narrate';
+    stopSpeech();
+    clearTimeout(timer);
+    clearTimeout(speechTimer);
+    setVoiceState(false);
+  }
+
+  function stopSpeech() {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+    }
+  }
+
+  function setVoiceState(speaking) {
+    document.getElementById('voiceDot').className = 'voice-dot' + (speaking ? ' speaking' : '');
+    document.getElementById('voiceLabel').textContent = speaking ? 'Speaking...' : 'Voice ready';
+  }
+
+  function speakAndAdvance() {
+    if (!playing) return;
+    const slide = slides[current];
+    const narration = slide.dataset.narration || '';
+    const duration = parseInt(slide.dataset.duration) || 6000;
+
+    if ('speechSynthesis' in window && narration) {
+      stopSpeech();
+      const utter = new SpeechSynthesisUtterance(narration);
+      utter.rate = 0.92;
+      utter.pitch = 1.0;
+      utter.volume = 1.0;
+
+      // Pick a good voice if available
+      const voices = window.speechSynthesis.getVoices();
+      const preferred = voices.find(v =>
+        v.name.includes('David') || v.name.includes('Mark') ||
+        v.name.includes('Daniel') || v.name.includes('Google UK') ||
+        v.name.includes('Google US') || (v.lang === 'en-US' && !v.localService === false)
+      );
+      if (preferred) utter.voice = preferred;
+
+      setVoiceState(true);
+      utter.onend = () => {
+        setVoiceState(false);
+        if (!playing) return;
+        speechTimer = setTimeout(() => {
+          if (!playing) return;
+          if (current < slides.length - 1) {
+            nextSlide();
+            speakAndAdvance();
+          } else {
+            stopAll();
+          }
+        }, 800);
+      };
+      utter.onerror = () => {
+        setVoiceState(false);
+        // fallback: use duration
+        timer = setTimeout(() => {
+          if (!playing) return;
+          if (current < slides.length - 1) { nextSlide(); speakAndAdvance(); }
+          else stopAll();
+        }, duration);
+      };
+      window.speechSynthesis.speak(utter);
+    } else {
+      // No speech API — use timer
+      timer = setTimeout(() => {
+        if (!playing) return;
+        if (current < slides.length - 1) { nextSlide(); speakAndAdvance(); }
+        else stopAll();
+      }, duration);
+    }
+  }
+
+  // Keyboard controls
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); if (playing) { stopAll(); } else nextSlide(); }
+    if (e.key === 'ArrowLeft') { e.preventDefault(); prevSlide(); }
+    if (e.key === 'p' || e.key === 'P') togglePlay();
+    if (e.key === 'Escape') stopAll();
+    if (e.key === 'f' || e.key === 'F') document.documentElement.requestFullscreen?.();
+  });
+
+  // Load voices
+  if ('speechSynthesis' in window) {
+    window.speechSynthesis.getVoices();
+    window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
+  }
+
+  updateUI();
+</script>
+
+</body>
+</html>
