@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
+*.egg-info/
+
+# Environment & secrets
+backend/.env
+backend/db_hub.sqlite3
+
+# Frontend build artifacts & deps
+frontend/node_modules/
+frontend/dist/
+
+# Packaging output
+db-hub-*.zip
+
+# OS
+.DS_Store
+Thumbs.db
+# Logs
+*.log
+*.err

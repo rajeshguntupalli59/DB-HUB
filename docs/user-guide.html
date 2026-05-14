@@ -1,0 +1,1120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DB Hub — User Guide</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    html { scroll-behavior: smooth; }
+    .prose h2 { font-size: 1.25rem; font-weight: 700; color: #f1f5f9; margin: 2.5rem 0 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid #1e293b; }
+    .prose h3 { font-size: 1rem; font-weight: 600; color: #e2e8f0; margin: 1.75rem 0 0.75rem; }
+    .prose h4 { font-size: 0.875rem; font-weight: 600; color: #cbd5e1; margin: 1.25rem 0 0.5rem; }
+    .prose p  { font-size: 0.875rem; color: #94a3b8; line-height: 1.75; margin-bottom: 0.875rem; }
+    .prose ul { margin-bottom: 1rem; padding-left: 1.25rem; }
+    .prose li { font-size: 0.875rem; color: #94a3b8; line-height: 1.75; list-style: disc; }
+    .prose ol { margin-bottom: 1rem; padding-left: 1.25rem; }
+    .prose ol li { list-style: decimal; }
+    .prose code { font-family: ui-monospace, monospace; font-size: 0.8rem; background: #0f172a; border: 1px solid #1e293b; padding: 0.1rem 0.35rem; border-radius: 4px; color: #a78bfa; }
+    .prose pre  { background: #0f172a; border: 1px solid #1e293b; border-radius: 10px; padding: 1rem 1.25rem; margin: 1rem 0 1.25rem; overflow-x: auto; }
+    .prose pre code { background: transparent; border: none; padding: 0; color: #e2e8f0; font-size: 0.8rem; line-height: 1.7; }
+    .prose a { color: #a78bfa; text-decoration: underline; }
+    .prose strong { color: #e2e8f0; }
+    .callout-info    { background: #0f172a; border-left: 3px solid #6366f1; padding: 0.75rem 1rem; border-radius: 0 8px 8px 0; margin: 1rem 0; }
+    .callout-warn    { background: #0f172a; border-left: 3px solid #f59e0b; padding: 0.75rem 1rem; border-radius: 0 8px 8px 0; margin: 1rem 0; }
+    .callout-tip     { background: #0f172a; border-left: 3px solid #10b981; padding: 0.75rem 1rem; border-radius: 0 8px 8px 0; margin: 1rem 0; }
+    .callout-info p, .callout-warn p, .callout-tip p { margin: 0; font-size: 0.8rem; }
+    .sidebar-link { display: block; font-size: 0.75rem; color: #64748b; padding: 0.3rem 0.75rem; border-radius: 6px; transition: all 0.15s; }
+    .sidebar-link:hover { color: #e2e8f0; background: #1e293b; }
+    .sidebar-link.active { color: #a78bfa; background: #1e1b4b; }
+    .sidebar-section { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #334155; padding: 0.75rem 0.75rem 0.25rem; }
+    .step-num { width: 22px; height: 22px; border-radius: 50%; background: #4c1d95; border: 1px solid #7c3aed; color: #c4b5fd; font-size: 0.7rem; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
+    .module-pill { display: inline-flex; align-items: center; gap: 0.375rem; font-size: 0.7rem; font-weight: 600; padding: 0.2rem 0.6rem; border-radius: 999px; border: 1px solid; }
+  </style>
+</head>
+<body class="bg-gray-950 text-gray-100 font-sans antialiased">
+
+  <!-- Top nav -->
+  <nav class="fixed top-0 left-0 right-0 z-50 h-12 border-b border-gray-800/60 bg-gray-950/95 backdrop-blur-md flex items-center px-6 gap-4">
+    <div class="flex items-center gap-2">
+      <div class="w-6 h-6 rounded-md bg-gradient-to-br from-violet-500 to-indigo-600 flex items-center justify-center">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 7v10c0 2.21 3.58 4 8 4s8-1.79 8-4V7"/>
+          <path d="M4 7c0 2.21 3.58 4 8 4s8-1.79 8-4"/>
+        </svg>
+      </div>
+      <span class="text-sm font-bold text-white">DB Hub</span>
+      <span class="text-gray-600 text-xs">·</span>
+      <span class="text-xs text-gray-500">User Guide</span>
+    </div>
+    <div class="flex-1"></div>
+    <a href="../website/index.html" class="text-xs text-gray-500 hover:text-white transition">← Back to product page</a>
+  </nav>
+
+  <div class="flex min-h-screen pt-12">
+
+    <!-- Sidebar -->
+    <aside class="w-56 flex-shrink-0 fixed top-12 left-0 bottom-0 border-r border-gray-800/60 bg-gray-900/60 overflow-y-auto">
+      <div class="py-4">
+        <div class="sidebar-section">Getting Started</div>
+        <a href="#overview"      class="sidebar-link">What is DB Hub?</a>
+        <a href="#requirements"  class="sidebar-link">Requirements</a>
+        <a href="#installation"  class="sidebar-link">Installation</a>
+        <a href="#first-login"   class="sidebar-link">First Login</a>
+
+        <div class="sidebar-section mt-2">Connections</div>
+        <a href="#add-connection"  class="sidebar-link">Adding a Connection</a>
+        <a href="#postgresql"      class="sidebar-link">PostgreSQL</a>
+        <a href="#sqlserver"       class="sidebar-link">SQL Server</a>
+        <a href="#mysql"           class="sidebar-link">MySQL</a>
+
+        <div class="sidebar-section mt-2">Modules</div>
+        <a href="#mod-team"      class="sidebar-link">1 · Team & Access</a>
+        <a href="#mod-schema"    class="sidebar-link">2 · Schema Browser</a>
+        <a href="#mod-docs"      class="sidebar-link">3 · AI Documentation</a>
+        <a href="#mod-erd"       class="sidebar-link">4 · ER Diagram</a>
+        <a href="#mod-tracker"   class="sidebar-link">5 · Change Tracker</a>
+        <a href="#mod-assistant" class="sidebar-link">6 · AI Assistant</a>
+        <a href="#mod-optimizer" class="sidebar-link">7 · Query Optimizer</a>
+
+        <div class="sidebar-section mt-2">Enterprise</div>
+        <a href="#enterprise-arch"    class="sidebar-link">Network Architecture</a>
+        <a href="#enterprise-firewall" class="sidebar-link">Firewall Rules</a>
+        <a href="#enterprise-service" class="sidebar-link">Service Account Setup</a>
+        <a href="#enterprise-sql-pg"  class="sidebar-link">PG — Minimal Privileges</a>
+        <a href="#enterprise-sql-mssql" class="sidebar-link">SQL Server — Minimal Privileges</a>
+        <a href="#enterprise-sql-mysql" class="sidebar-link">MySQL — Minimal Privileges</a>
+
+        <div class="sidebar-section mt-2">Reference</div>
+        <a href="#env"           class="sidebar-link">Environment Variables</a>
+        <a href="#roles"         class="sidebar-link">Roles & Permissions</a>
+        <a href="#troubleshoot"  class="sidebar-link">Troubleshooting</a>
+        <a href="#faq"           class="sidebar-link">FAQ</a>
+      </div>
+    </aside>
+
+    <!-- Main content -->
+    <main class="ml-56 flex-1 max-w-3xl px-10 py-10 prose">
+
+      <!-- ── OVERVIEW ── -->
+      <section id="overview">
+        <div class="flex items-center gap-3 mb-6">
+          <div class="w-10 h-10 rounded-xl bg-violet-500/15 border border-violet-500/25 flex items-center justify-center">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 7v10c0 2.21 3.58 4 8 4s8-1.79 8-4V7"/>
+              <path d="M4 7c0 2.21 3.58 4 8 4s8-1.79 8-4"/>
+              <path d="M4 7c0-2.21 3.58-4 8-4s8 1.79 8 4"/>
+            </svg>
+          </div>
+          <div>
+            <h1 style="font-size:1.5rem;font-weight:800;color:#f1f5f9;margin:0;">DB Hub User Guide</h1>
+            <p style="margin:0;font-size:0.75rem;color:#475569;">Version 1.0 · Updated May 2026</p>
+          </div>
+        </div>
+
+        <h2>What is DB Hub?</h2>
+        <p>DB Hub is a <strong>self-hosted database management platform</strong> that gives your entire team a shared workspace for everything database-related. Instead of juggling five different tools, DB Hub puts schema browsing, documentation, ER diagrams, query optimization, change tracking, and AI assistance in one application — connected to your PostgreSQL, SQL Server, and MySQL databases.</p>
+
+        <p>DB Hub runs entirely on your own server. No cloud sync, no usage tracking, no vendor lock-in. Your database credentials and schema data never leave your network.</p>
+
+        <div class="grid grid-cols-2 gap-3 my-5 not-prose">
+          <div class="bg-gray-900 border border-gray-800 rounded-xl p-4">
+            <p class="text-xs font-semibold text-violet-400 mb-2">8 Modules included</p>
+            <ul class="space-y-1">
+              <li class="text-xs text-gray-400">· Team &amp; Access Control</li>
+              <li class="text-xs text-gray-400">· Connection Manager</li>
+              <li class="text-xs text-gray-400">· Schema Browser</li>
+              <li class="text-xs text-gray-400">· AI Documentation</li>
+              <li class="text-xs text-gray-400">· ER Diagram</li>
+              <li class="text-xs text-gray-400">· Change Tracker</li>
+              <li class="text-xs text-gray-400">· AI Assistant</li>
+              <li class="text-xs text-gray-400">· Query Optimizer</li>
+            </ul>
+          </div>
+          <div class="bg-gray-900 border border-gray-800 rounded-xl p-4">
+            <p class="text-xs font-semibold text-emerald-400 mb-2">3 Databases supported</p>
+            <ul class="space-y-1">
+              <li class="text-xs text-gray-400">· PostgreSQL 12 – 17</li>
+              <li class="text-xs text-gray-400">· SQL Server 2017 – 2022</li>
+              <li class="text-xs text-gray-400">· MySQL 8.0+ / 8.4 LTS</li>
+            </ul>
+            <p class="text-xs font-semibold text-sky-400 mt-3 mb-2">Self-hosted</p>
+            <ul class="space-y-1">
+              <li class="text-xs text-gray-400">· Windows, Linux, macOS</li>
+              <li class="text-xs text-gray-400">· No Docker required</li>
+              <li class="text-xs text-gray-400">· SQLite — no second DB server</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── REQUIREMENTS ── -->
+      <section id="requirements">
+        <h2>Requirements</h2>
+        <h3>Server requirements</h3>
+        <ul>
+          <li><strong>Python 3.11 or higher</strong> — check with <code>python --version</code></li>
+          <li>500 MB free disk space (for the app + SQLite database)</li>
+          <li>Any OS: Windows 10+, Ubuntu 20.04+, macOS 12+</li>
+          <li>Network access to your database servers from the DB Hub host</li>
+        </ul>
+
+        <h3>Browser requirements</h3>
+        <ul>
+          <li>Any modern browser: Chrome, Firefox, Edge, Safari (2022+)</li>
+          <li>JavaScript must be enabled</li>
+        </ul>
+
+        <h3>Optional — for AI features only</h3>
+        <ul>
+          <li>An <strong>Anthropic API key</strong> (get one at console.anthropic.com) — needed for AI Documentation and AI Assistant modules only</li>
+          <li>The other 6 modules work with no API key at all</li>
+        </ul>
+
+        <div class="callout-info not-prose">
+          <p class="text-xs text-indigo-300"><strong>Note:</strong> DB Hub creates its own SQLite database file on first run. You do not need to install or configure a separate database server to run DB Hub itself.</p>
+        </div>
+      </section>
+
+      <!-- ── INSTALLATION ── -->
+      <section id="installation">
+        <h2>Installation</h2>
+
+        <h3>Step 1 — Download and extract</h3>
+        <p>After purchase you will receive a ZIP file. Extract it to a permanent location on your server — for example <code>C:\db-hub\</code> on Windows or <code>/opt/db-hub/</code> on Linux.</p>
+
+        <h3>Step 2 — Create the environment file</h3>
+        <p>Inside the <code>backend/</code> folder, create a file named <code>.env</code> with the following content:</p>
+        <pre><code># Required
+SECRET_KEY=replace-with-a-random-64-character-string
+ENCRYPTION_KEY=replace-with-a-fernet-key
+
+# Optional — only needed for AI Documentation and AI Assistant
+ANTHROPIC_API_KEY=sk-ant-...</code></pre>
+
+        <p>Generate your keys with Python:</p>
+        <pre><code>python -c "import secrets; print(secrets.token_hex(32))"
+python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())"</code></pre>
+
+        <div class="callout-warn not-prose">
+          <p class="text-xs text-amber-300"><strong>Important:</strong> Keep these keys safe. If you lose the ENCRYPTION_KEY, saved database passwords cannot be decrypted. Back up the <code>.env</code> file separately from the application.</p>
+        </div>
+
+        <h3>Step 3 — Install Python dependencies</h3>
+        <pre><code>cd backend
+pip install -r requirements.txt</code></pre>
+
+        <h3>Step 4 — Start DB Hub</h3>
+
+        <h4>Windows (PowerShell)</h4>
+        <pre><code>cd backend
+python -m uvicorn main:app --host 0.0.0.0 --port 8000</code></pre>
+
+        <h4>Linux / macOS</h4>
+        <pre><code>cd backend
+python -m uvicorn main:app --host 0.0.0.0 --port 8000</code></pre>
+
+        <h4>Running as a background service (Linux — systemd)</h4>
+        <pre><code>[Unit]
+Description=DB Hub
+After=network.target
+
+[Service]
+WorkingDirectory=/opt/db-hub/backend
+ExecStart=/usr/bin/python3 -m uvicorn main:app --host 0.0.0.0 --port 8000
+Restart=always
+
+[Install]
+WantedBy=multi-user.target</code></pre>
+        <p>Save to <code>/etc/systemd/system/dbhub.service</code>, then run <code>systemctl enable --now dbhub</code>.</p>
+
+        <h3>Step 5 — Open DB Hub</h3>
+        <p>Navigate to <code>http://your-server-ip:8000</code> in your browser. On the same machine, use <code>http://localhost:8000</code>.</p>
+      </section>
+
+      <!-- ── FIRST LOGIN ── -->
+      <section id="first-login">
+        <h2>First Login</h2>
+
+        <p>The first time you open DB Hub, you will see a <strong>Setup screen</strong> instead of a login form. This is how the first admin account is created.</p>
+
+        <div class="space-y-3 not-prose my-4">
+          <div class="flex items-start gap-3">
+            <div class="step-num">1</div>
+            <div>
+              <p class="text-sm font-semibold text-white mb-0.5">Fill in the setup form</p>
+              <p class="text-xs text-gray-400">Enter your name, email address, and a strong password. This creates the first admin account.</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-3">
+            <div class="step-num">2</div>
+            <div>
+              <p class="text-sm font-semibold text-white mb-0.5">You are redirected to the login page</p>
+              <p class="text-xs text-gray-400">Use the email and password you just created.</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-3">
+            <div class="step-num">3</div>
+            <div>
+              <p class="text-sm font-semibold text-white mb-0.5">You land on the Dashboard</p>
+              <p class="text-xs text-gray-400">All 8 modules are visible. Start by adding your first database connection.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="callout-info not-prose">
+          <p class="text-xs text-indigo-300">The setup screen only appears once. After the first admin is created, it redirects to the login page permanently. To create more users, use the <strong>Team</strong> module after logging in.</p>
+        </div>
+      </section>
+
+      <!-- ── CONNECTIONS ── -->
+      <section id="add-connection">
+        <h2>Adding a Database Connection</h2>
+
+        <p>All modules in DB Hub share the same saved connections. You configure a connection once, and every module can use it.</p>
+
+        <div class="space-y-3 not-prose my-4">
+          <div class="flex items-start gap-3">
+            <div class="step-num">1</div>
+            <div><p class="text-sm text-gray-300">Click <strong class="text-white">Connections</strong> in the left sidebar.</p></div>
+          </div>
+          <div class="flex items-start gap-3">
+            <div class="step-num">2</div>
+            <div><p class="text-sm text-gray-300">Click <strong class="text-white">New Connection</strong> in the top right.</p></div>
+          </div>
+          <div class="flex items-start gap-3">
+            <div class="step-num">3</div>
+            <div><p class="text-sm text-gray-300">Choose your database type, fill in the host, port, database name, and credentials.</p></div>
+          </div>
+          <div class="flex items-start gap-3">
+            <div class="step-num">4</div>
+            <div><p class="text-sm text-gray-300">Click <strong class="text-white">Test Connection</strong> to verify. Green means you're ready.</p></div>
+          </div>
+          <div class="flex items-start gap-3">
+            <div class="step-num">5</div>
+            <div><p class="text-sm text-gray-300">Click <strong class="text-white">Save</strong>. The connection is now available in all modules.</p></div>
+          </div>
+        </div>
+
+        <p>Passwords are encrypted with AES-128 (Fernet) before being stored. They are never stored in plain text.</p>
+      </section>
+
+      <section id="postgresql">
+        <h3>PostgreSQL connection settings</h3>
+        <div class="not-prose overflow-x-auto">
+          <table class="w-full text-xs border-collapse">
+            <thead><tr class="border-b border-gray-800"><th class="text-left py-2 px-3 text-gray-500 font-medium">Field</th><th class="text-left py-2 px-3 text-gray-500 font-medium">Typical value</th><th class="text-left py-2 px-3 text-gray-500 font-medium">Notes</th></tr></thead>
+            <tbody class="divide-y divide-gray-800/60">
+              <tr><td class="py-2 px-3 text-gray-300 font-mono">Host</td><td class="py-2 px-3 text-gray-400">localhost</td><td class="py-2 px-3 text-gray-500">IP address or hostname</td></tr>
+              <tr><td class="py-2 px-3 text-gray-300 font-mono">Port</td><td class="py-2 px-3 text-gray-400">5432</td><td class="py-2 px-3 text-gray-500">Default PostgreSQL port</td></tr>
+              <tr><td class="py-2 px-3 text-gray-300 font-mono">Database</td><td class="py-2 px-3 text-gray-400">mydb</td><td class="py-2 px-3 text-gray-500">Database name (not server name)</td></tr>
+              <tr><td class="py-2 px-3 text-gray-300 font-mono">Username</td><td class="py-2 px-3 text-gray-400">postgres</td><td class="py-2 px-3 text-gray-500">DB user with read access minimum</td></tr>
+              <tr><td class="py-2 px-3 text-gray-300 font-mono">Password</td><td class="py-2 px-3 text-gray-400">••••••</td><td class="py-2 px-3 text-gray-500">Stored encrypted</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="callout-tip not-prose mt-4">
+          <p class="text-xs text-emerald-300"><strong>Tip:</strong> For the Query Optimizer's slow query dashboard, the PostgreSQL user needs access to the <code>pg_stat_statements</code> view. Enable it with: <code>CREATE EXTENSION IF NOT EXISTS pg_stat_statements;</code> (requires superuser).</p>
+        </div>
+      </section>
+
+      <section id="sqlserver">
+        <h3>SQL Server connection settings</h3>
+        <div class="not-prose overflow-x-auto">
+          <table class="w-full text-xs border-collapse">
+            <thead><tr class="border-b border-gray-800"><th class="text-left py-2 px-3 text-gray-500 font-medium">Field</th><th class="text-left py-2 px-3 text-gray-500 font-medium">Example</th><th class="text-left py-2 px-3 text-gray-500 font-medium">Notes</th></tr></thead>
+            <tbody class="divide-y divide-gray-800/60">
+              <tr><td class="py-2 px-3 text-gray-300 font-mono">Host</td><td class="py-2 px-3 text-gray-400">192.168.1.10</td><td class="py-2 px-3 text-gray-500">IP or hostname — do NOT include \INSTANCENAME here</td></tr>
+              <tr><td class="py-2 px-3 text-gray-300 font-mono">Port</td><td class="py-2 px-3 text-gray-400">1433</td><td class="py-2 px-3 text-gray-500">Default; named instances may use a different port (see below)</td></tr>
+              <tr><td class="py-2 px-3 text-gray-300 font-mono">Database</td><td class="py-2 px-3 text-gray-400">master</td><td class="py-2 px-3 text-gray-500">Any database on the server</td></tr>
+              <tr><td class="py-2 px-3 text-gray-300 font-mono">Username</td><td class="py-2 px-3 text-gray-400">(leave blank)</td><td class="py-2 px-3 text-gray-500">Leave blank for Windows Authentication</td></tr>
+              <tr><td class="py-2 px-3 text-gray-300 font-mono">Password</td><td class="py-2 px-3 text-gray-400">(leave blank)</td><td class="py-2 px-3 text-gray-500">Leave blank for Windows Authentication</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h4>Named instances (e.g. SQLEXPRESS)</h4>
+        <p>SQL Server Express and named instances do not use port 1433 by default — they use a dynamic TCP port. To find it, run this on the SQL Server machine:</p>
+        <pre><code>(Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\Microsoft SQL Server\MSSQL16.SQLEXPRESS\MSSQLServer\SuperSocketNetLib\Tcp\IPAll").TcpDynamicPorts</code></pre>
+        <p>Use that number as the Port in DB Hub. Hostname stays as the machine IP — do not put <code>localhost\SQLEXPRESS</code> in the host field.</p>
+
+        <div class="callout-tip not-prose">
+          <p class="text-xs text-emerald-300"><strong>Windows Auth tip:</strong> DB Hub must be running on a Windows machine that is joined to the same domain (or the same local machine) as the SQL Server for Windows Authentication to work.</p>
+        </div>
+      </section>
+
+      <section id="mysql">
+        <h3>MySQL connection settings</h3>
+        <div class="not-prose overflow-x-auto">
+          <table class="w-full text-xs border-collapse">
+            <thead><tr class="border-b border-gray-800"><th class="text-left py-2 px-3 text-gray-500 font-medium">Field</th><th class="text-left py-2 px-3 text-gray-500 font-medium">Typical value</th><th class="text-left py-2 px-3 text-gray-500 font-medium">Notes</th></tr></thead>
+            <tbody class="divide-y divide-gray-800/60">
+              <tr><td class="py-2 px-3 text-gray-300 font-mono">Host</td><td class="py-2 px-3 text-gray-400">localhost</td><td class="py-2 px-3 text-gray-500">IP or hostname</td></tr>
+              <tr><td class="py-2 px-3 text-gray-300 font-mono">Port</td><td class="py-2 px-3 text-gray-400">3306</td><td class="py-2 px-3 text-gray-500">Default MySQL port</td></tr>
+              <tr><td class="py-2 px-3 text-gray-300 font-mono">Database</td><td class="py-2 px-3 text-gray-400">myapp</td><td class="py-2 px-3 text-gray-500">Schema/database name</td></tr>
+              <tr><td class="py-2 px-3 text-gray-300 font-mono">Username</td><td class="py-2 px-3 text-gray-400">root</td><td class="py-2 px-3 text-gray-500">User with SELECT + SHOW privileges</td></tr>
+              <tr><td class="py-2 px-3 text-gray-300 font-mono">Password</td><td class="py-2 px-3 text-gray-400">••••••</td><td class="py-2 px-3 text-gray-500">Stored encrypted</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="callout-tip not-prose mt-4">
+          <p class="text-xs text-emerald-300"><strong>Tip:</strong> For the slow query dashboard, ensure <code>performance_schema = ON</code> in your MySQL config (it is on by default in MySQL 8.0+).</p>
+        </div>
+      </section>
+
+      <!-- ── MODULE: TEAM ── -->
+      <section id="mod-team">
+        <h2>Module 1 · Team &amp; Access</h2>
+        <p>The Team module lets you invite colleagues and control what they can see and do inside DB Hub.</p>
+
+        <h3>Roles</h3>
+        <div class="not-prose space-y-2 my-4">
+          <div class="flex items-start gap-3 p-3 bg-gray-900 border border-gray-800 rounded-xl">
+            <span class="module-pill bg-indigo-500/10 border-indigo-500/25 text-indigo-400">admin</span>
+            <p class="text-xs text-gray-400 leading-relaxed">Full access. Can create users, delete connections, manage everything. Only admins can access the Team module.</p>
+          </div>
+          <div class="flex items-start gap-3 p-3 bg-gray-900 border border-gray-800 rounded-xl">
+            <span class="module-pill bg-purple-500/10 border-purple-500/25 text-purple-400">editor</span>
+            <p class="text-xs text-gray-400 leading-relaxed">Can use all 8 modules, add connections, generate docs, run optimizer queries, and take snapshots.</p>
+          </div>
+          <div class="flex items-start gap-3 p-3 bg-gray-900 border border-gray-800 rounded-xl">
+            <span class="module-pill bg-slate-500/10 border-slate-500/25 text-slate-400">viewer</span>
+            <p class="text-xs text-gray-400 leading-relaxed">Read-only. Can browse schemas, view docs, view ERDs, and view snapshots. Cannot add connections or run write operations.</p>
+          </div>
+        </div>
+
+        <h3>Adding a team member</h3>
+        <ol>
+          <li>Go to <strong>Team</strong> in the sidebar (admin only).</li>
+          <li>Click <strong>Invite User</strong>.</li>
+          <li>Enter their name, email, and choose a role.</li>
+          <li>Set a temporary password — they can change it after first login.</li>
+          <li>Share the DB Hub URL and their credentials with them.</li>
+        </ol>
+      </section>
+
+      <!-- ── MODULE: SCHEMA ── -->
+      <section id="mod-schema">
+        <h2>Module 2 · Schema Browser</h2>
+        <p>Browse every table, column, index, and foreign key in your database in real time. No caching — the Schema Browser always reflects the live state of your database.</p>
+
+        <h3>How to use it</h3>
+        <ol>
+          <li>Click <strong>Schema Browser</strong> in the sidebar.</li>
+          <li>Pick a connection from the dropdown at the top.</li>
+          <li>The left panel lists all schemas and tables. Click any table to open it.</li>
+          <li>The right panel shows <strong>Columns</strong>, <strong>Indexes</strong>, and <strong>Foreign Keys</strong> tabs.</li>
+        </ol>
+
+        <h3>What you can see</h3>
+        <ul>
+          <li><strong>Columns</strong> — name, data type, nullable, default value, primary key flag</li>
+          <li><strong>Indexes</strong> — index name, type (btree/hash/etc.), columns covered, uniqueness</li>
+          <li><strong>Foreign Keys</strong> — source column, target table, target column, constraint name</li>
+        </ul>
+
+        <div class="callout-tip not-prose">
+          <p class="text-xs text-emerald-300"><strong>Tip:</strong> Use Schema Browser alongside the Query Optimizer — find the table structure here, then paste a query into the optimizer to analyze it.</p>
+        </div>
+      </section>
+
+      <!-- ── MODULE: DOCS ── -->
+      <section id="mod-docs">
+        <h2>Module 3 · AI Documentation</h2>
+        <p>Generate professional markdown documentation for any table using Claude AI. The AI reads your column names, types, constraints, and foreign keys to write a description that actually makes sense.</p>
+
+        <div class="callout-info not-prose">
+          <p class="text-xs text-indigo-300"><strong>Requires:</strong> <code>ANTHROPIC_API_KEY</code> in your <code>.env</code> file. AI calls are billed directly to your Anthropic account at standard rates.</p>
+        </div>
+
+        <h3>Generating docs for a table</h3>
+        <ol>
+          <li>Click <strong>Documentation</strong> in the sidebar.</li>
+          <li>Select a connection and then a table from the dropdowns.</li>
+          <li>Click <strong>Generate Docs</strong>. This takes 5–15 seconds.</li>
+          <li>The doc appears in the right panel in formatted markdown.</li>
+          <li>Edit the doc if needed — it's fully editable after generation.</li>
+          <li>Click <strong>Save</strong> to persist it.</li>
+        </ol>
+
+        <h3>Exporting docs</h3>
+        <p>Click <strong>Export All as Markdown</strong> to download a single <code>.md</code> file containing documentation for every table that has been generated. This file can be dropped directly into GitHub, Notion, Confluence, or any markdown-compatible system.</p>
+
+        <div class="callout-tip not-prose">
+          <p class="text-xs text-emerald-300"><strong>Tip:</strong> Generate docs once, then maintain them manually. The AI gives you a solid first draft — your team adds the business context on top.</p>
+        </div>
+      </section>
+
+      <!-- ── MODULE: ERD ── -->
+      <section id="mod-erd">
+        <h2>Module 4 · ER Diagram</h2>
+        <p>An interactive visual map of your schema. Tables are displayed as draggable cards; foreign key relationships are drawn as connecting lines. The layout is automatic — drag tables to arrange them however makes sense for your team.</p>
+
+        <h3>How to use it</h3>
+        <ol>
+          <li>Click <strong>ER Diagram</strong> in the sidebar.</li>
+          <li>Select a connection. The diagram loads automatically.</li>
+          <li>Drag any table card to rearrange. The relationship lines follow.</li>
+          <li>Each table card shows all columns and their types.</li>
+          <li>FK lines show the source column → target table relationship.</li>
+        </ol>
+
+        <h3>Reading the diagram</h3>
+        <ul>
+          <li><strong>Table cards</strong> — table name at the top, columns listed below with type</li>
+          <li><strong>Connecting lines</strong> — each line represents a foreign key. The line starts at the FK column and ends at the referenced table.</li>
+          <li><strong>Pan and zoom</strong> — use scroll to zoom, click-drag on the background to pan</li>
+        </ul>
+
+        <div class="callout-tip not-prose">
+          <p class="text-xs text-emerald-300"><strong>Tip:</strong> The ER Diagram is great for onboarding new team members. Take a screenshot of the arranged diagram and add it to your project wiki.</p>
+        </div>
+      </section>
+
+      <!-- ── MODULE: TRACKER ── -->
+      <section id="mod-tracker">
+        <h2>Module 5 · Change Tracker</h2>
+        <p>The Change Tracker takes a snapshot of your entire schema and lets you diff any two snapshots to see exactly what changed — new tables, dropped columns, added indexes, modified types.</p>
+
+        <h3>Taking a snapshot</h3>
+        <ol>
+          <li>Click <strong>Change Tracker</strong> in the sidebar.</li>
+          <li>Select a connection.</li>
+          <li>Click <strong>Take Snapshot</strong>. DB Hub records the full schema at this moment.</li>
+          <li>Give the snapshot a label (e.g. "Before v2.3 deploy") — or leave it blank for an auto-generated timestamp.</li>
+        </ol>
+
+        <h3>Comparing snapshots</h3>
+        <ol>
+          <li>With at least two snapshots taken, click <strong>Compare</strong>.</li>
+          <li>Select a "before" snapshot and an "after" snapshot from the dropdowns.</li>
+          <li>The diff view shows three categories:
+            <ul>
+              <li><strong class="text-emerald-400">Added</strong> — new tables or columns</li>
+              <li><strong class="text-red-400">Removed</strong> — dropped tables or columns</li>
+              <li><strong class="text-amber-400">Modified</strong> — type changes, nullability changes, new indexes</li>
+            </ul>
+          </li>
+        </ol>
+
+        <h3>Recommended workflow</h3>
+        <ul>
+          <li>Snapshot <strong>before</strong> every migration or deploy</li>
+          <li>Snapshot <strong>after</strong> the migration completes</li>
+          <li>Use the diff to confirm the migration applied exactly the expected changes</li>
+        </ul>
+
+        <div class="callout-warn not-prose">
+          <p class="text-xs text-amber-300"><strong>Important:</strong> Snapshots capture schema structure only — not data. They are safe to take on production databases.</p>
+        </div>
+      </section>
+
+      <!-- ── MODULE: ASSISTANT ── -->
+      <section id="mod-assistant">
+        <h2>Module 6 · AI Assistant</h2>
+        <p>A schema-aware AI chat assistant. It reads your live table structure before answering so its suggestions are specific to your actual column names, types, and relationships — not generic SQL advice.</p>
+
+        <div class="callout-info not-prose">
+          <p class="text-xs text-indigo-300"><strong>Requires:</strong> <code>ANTHROPIC_API_KEY</code> in your <code>.env</code> file.</p>
+        </div>
+
+        <h3>How to use it</h3>
+        <ol>
+          <li>Click <strong>AI Assistant</strong> in the sidebar.</li>
+          <li>Select a connection — the assistant automatically loads your schema.</li>
+          <li>Type your question in the input box and press Enter or click Send.</li>
+        </ol>
+
+        <h3>What to ask it</h3>
+        <ul>
+          <li>"What indexes do I have on the orders table?"</li>
+          <li>"Write a query to find all customers who placed more than 5 orders last month."</li>
+          <li>"Why might my users table be slow to query?"</li>
+          <li>"What does the status column in the invoices table likely represent?"</li>
+          <li>"Which tables have foreign keys pointing to the products table?"</li>
+        </ul>
+
+        <div class="callout-tip not-prose">
+          <p class="text-xs text-emerald-300"><strong>Tip:</strong> The assistant remembers the conversation within a session. You can ask follow-up questions — "now rewrite that query to avoid the subquery" — and it keeps context.</p>
+        </div>
+      </section>
+
+      <!-- ── MODULE: OPTIMIZER ── -->
+      <section id="mod-optimizer">
+        <h2>Module 7 · Query Optimizer</h2>
+        <p>Four performance tools in one tab. Paste a SQL query or select a connection to identify and fix performance problems across PostgreSQL, SQL Server, and MySQL.</p>
+
+        <!-- EXPLAIN -->
+        <h3>Tab 1 — EXPLAIN Visualizer</h3>
+        <p>Visualizes the execution plan for any SQL query as an interactive tree. Each node shows cost, estimated rows, and the operation type. Warnings are highlighted automatically.</p>
+
+        <ol>
+          <li>Select a connection and click the <strong>EXPLAIN</strong> tab.</li>
+          <li>Paste your SQL query into the editor.</li>
+          <li>Optional: enable <strong>ANALYZE</strong> (actually runs the query and shows real timing — PostgreSQL only) or <strong>BUFFERS</strong> (shows cache hit/miss stats — PostgreSQL only).</li>
+          <li>Click <strong>Run EXPLAIN</strong>.</li>
+          <li>The plan tree appears below. Expand nodes to see child operations.</li>
+          <li>The <strong>Summary</strong> bar shows total cost, plan rows, and node type at a glance.</li>
+          <li><strong>Warnings</strong> (if any) appear below the summary — e.g. "Sequential scan on large table" or "Hash join with high row estimate error."</li>
+        </ol>
+
+        <div class="callout-warn not-prose">
+          <p class="text-xs text-amber-300"><strong>ANALYZE mode runs the query.</strong> Do not use ANALYZE on INSERT/UPDATE/DELETE statements in production — use it only on SELECT queries.</p>
+        </div>
+
+        <!-- INDEX ADVISOR -->
+        <h3>Tab 2 — Index Advisor</h3>
+        <p>Recommends missing indexes based on your query's WHERE and ORDER BY clauses, and by checking for foreign key columns without a supporting index in the live catalog.</p>
+
+        <ol>
+          <li>Select a connection and click the <strong>Index Advisor</strong> tab.</li>
+          <li>Paste the query you want to optimize.</li>
+          <li>Click <strong>Analyze</strong>.</li>
+          <li>Each recommendation card shows:
+            <ul>
+              <li>The table and column(s) to index</li>
+              <li>The reason (WHERE clause, ORDER BY, missing FK index)</li>
+              <li>The estimated benefit (High / Medium / Low)</li>
+              <li>A ready-to-run <code>CREATE INDEX</code> statement — click Copy to grab it</li>
+            </ul>
+          </li>
+        </ol>
+
+        <div class="callout-tip not-prose">
+          <p class="text-xs text-emerald-300"><strong>Tip:</strong> Review recommendations before applying them. More indexes improve reads but slow writes. For OLTP tables with heavy INSERT/UPDATE workloads, prioritize only High-benefit recommendations.</p>
+        </div>
+
+        <!-- SLOW QUERIES -->
+        <h3>Tab 3 — Slow Query Dashboard</h3>
+        <p>Shows your historically slowest queries, sorted by mean execution time. Data comes directly from your database's built-in statistics — no agents or instrumentation required.</p>
+
+        <div class="not-prose space-y-2 my-4">
+          <div class="p-3 bg-gray-900 border border-gray-800 rounded-xl">
+            <p class="text-xs font-semibold text-sky-400 mb-1">PostgreSQL</p>
+            <p class="text-xs text-gray-400">Reads from <code class="text-violet-400">pg_stat_statements</code>. Enable with: <code class="text-violet-400">CREATE EXTENSION pg_stat_statements;</code></p>
+          </div>
+          <div class="p-3 bg-gray-900 border border-gray-800 rounded-xl">
+            <p class="text-xs font-semibold text-orange-400 mb-1">SQL Server</p>
+            <p class="text-xs text-gray-400">Reads from <code class="text-violet-400">sys.dm_exec_query_stats</code> and <code class="text-violet-400">sys.dm_exec_sql_text</code>. No setup required — DMVs are always available.</p>
+          </div>
+          <div class="p-3 bg-gray-900 border border-gray-800 rounded-xl">
+            <p class="text-xs font-semibold text-amber-400 mb-1">MySQL</p>
+            <p class="text-xs text-gray-400">Reads from <code class="text-violet-400">performance_schema.events_statements_summary_by_digest</code>. Enabled by default in MySQL 8.0+.</p>
+          </div>
+        </div>
+
+        <p>Columns shown: <strong>Query text</strong>, <strong>Calls</strong>, <strong>Mean time (ms)</strong>, <strong>Total time</strong>, <strong>Min/Max time</strong>, <strong>Rows returned</strong>, <strong>Cache hit %</strong> (PostgreSQL only).</p>
+
+        <!-- REWRITER -->
+        <h3>Tab 4 — SQL Rewriter</h3>
+        <p>Paste any SQL query and DB Hub checks it against 8 common anti-pattern rules. No database connection needed — this analysis is pure text.</p>
+
+        <div class="not-prose grid grid-cols-2 gap-2 my-4">
+          <div class="p-3 bg-gray-900 border border-red-500/20 rounded-xl">
+            <span class="text-[10px] font-bold text-red-400 uppercase">High</span>
+            <ul class="mt-1.5 space-y-1">
+              <li class="text-xs text-gray-400">· SELECT * — fetch all columns</li>
+              <li class="text-xs text-gray-400">· OR in WHERE — prevents index use</li>
+              <li class="text-xs text-gray-400">· Function on indexed column</li>
+            </ul>
+          </div>
+          <div class="p-3 bg-gray-900 border border-amber-500/20 rounded-xl">
+            <span class="text-[10px] font-bold text-amber-400 uppercase">Medium</span>
+            <ul class="mt-1.5 space-y-1">
+              <li class="text-xs text-gray-400">· LIKE '%value' — leading wildcard</li>
+              <li class="text-xs text-gray-400">· SELECT DISTINCT — join problem</li>
+              <li class="text-xs text-gray-400">· NOT IN (subquery) — NULL unsafe</li>
+              <li class="text-xs text-gray-400">· Implicit cross join (FROM a, b)</li>
+            </ul>
+          </div>
+          <div class="p-3 bg-gray-900 border border-sky-500/20 rounded-xl col-span-2">
+            <span class="text-[10px] font-bold text-sky-400 uppercase">Low</span>
+            <ul class="mt-1.5 space-y-1 flex gap-6">
+              <li class="text-xs text-gray-400">· Large IN list (&gt;50 literals)</li>
+              <li class="text-xs text-gray-400">· Large OFFSET pagination</li>
+            </ul>
+          </div>
+        </div>
+
+        <p>Each finding shows the issue, a plain-English explanation, a suggested fix, and — where possible — an auto-rewritten version of the SQL. Click <strong>Copy</strong> to grab the rewrite.</p>
+      </section>
+
+      <!-- ── ENTERPRISE ── -->
+      <section id="enterprise-arch">
+        <h2>Enterprise Deployment</h2>
+
+        <h3>How DB Hub fits inside a corporate network</h3>
+        <p>The most common question from enterprise buyers is: <em>"Our firewall blocks external tools from reaching our databases — how does DB Hub work?"</em></p>
+        <p><strong>DB Hub is not an external tool.</strong> You install it on a server inside your own network. Users access it through a web browser on port 8000 (or 443 with a reverse proxy). The browser never touches a database port. Only the DB Hub server makes database connections — and that server is already inside your perimeter.</p>
+
+        <div class="not-prose my-5 bg-gray-900 border border-gray-800 rounded-2xl p-5 font-mono text-xs">
+          <p class="text-gray-500 mb-3">// How traffic actually flows</p>
+          <div class="space-y-1">
+            <p class="text-gray-300">[User Browser]</p>
+            <p class="text-gray-600 pl-4">│  HTTP port 8000  (or HTTPS 443)</p>
+            <p class="text-gray-600 pl-4">│  ← only this crosses any desk/VPN boundary</p>
+            <p class="text-gray-300 pl-4">▼</p>
+            <p class="text-violet-400">[DB Hub Server]  ← runs on your internal server</p>
+            <p class="text-gray-600 pl-4">│  TCP 5432  (PostgreSQL)</p>
+            <p class="text-gray-600 pl-4">│  TCP 1433  (SQL Server)</p>
+            <p class="text-gray-600 pl-4">│  TCP 3306  (MySQL)</p>
+            <p class="text-gray-600 pl-4">│  ← internal server-to-server only</p>
+            <p class="text-gray-300 pl-4">▼</p>
+            <p class="text-emerald-400">[Database Servers]  ← never exposed to browsers</p>
+          </div>
+          <p class="text-gray-600 mt-3">// The only external call (optional):</p>
+          <p class="text-gray-300 pl-4">DB Hub → api.anthropic.com  (AI features only, uses your key)</p>
+        </div>
+
+        <p>This means your database servers never need new firewall rules for browser clients. The only rule needed is the one allowing <strong>DB Hub server → database server</strong> on the database port — the same type of rule you would add for any internal application server.</p>
+
+        <div class="callout-tip not-prose">
+          <p class="text-xs text-emerald-300"><strong>How to pitch this to your security team:</strong> "DB Hub is a self-hosted internal web application. It's equivalent to deploying an internal wiki or monitoring tool. The database ports are only accessed server-to-server, not from user workstations."</p>
+        </div>
+      </section>
+
+      <section id="enterprise-firewall">
+        <h3>Firewall rules required</h3>
+        <p>This is the complete list of network rules needed to run DB Hub in a corporate environment. Nothing else.</p>
+
+        <div class="not-prose overflow-x-auto my-4">
+          <table class="w-full text-xs border-collapse">
+            <thead>
+              <tr class="border-b border-gray-800">
+                <th class="text-left py-2 px-3 text-gray-500 font-medium">Source</th>
+                <th class="text-left py-2 px-3 text-gray-500 font-medium">Destination</th>
+                <th class="text-left py-2 px-3 text-gray-500 font-medium">Port</th>
+                <th class="text-left py-2 px-3 text-gray-500 font-medium">Why</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-800/60">
+              <tr>
+                <td class="py-2 px-3 text-gray-300">User workstations / VPN</td>
+                <td class="py-2 px-3 text-violet-400">DB Hub server</td>
+                <td class="py-2 px-3 text-gray-400">8000 (or 443)</td>
+                <td class="py-2 px-3 text-gray-500">Browser access to the web UI</td>
+              </tr>
+              <tr>
+                <td class="py-2 px-3 text-violet-400">DB Hub server</td>
+                <td class="py-2 px-3 text-emerald-400">PostgreSQL server</td>
+                <td class="py-2 px-3 text-gray-400">5432</td>
+                <td class="py-2 px-3 text-gray-500">DB Hub reading schema &amp; stats</td>
+              </tr>
+              <tr>
+                <td class="py-2 px-3 text-violet-400">DB Hub server</td>
+                <td class="py-2 px-3 text-emerald-400">SQL Server</td>
+                <td class="py-2 px-3 text-gray-400">1433 (or dynamic)</td>
+                <td class="py-2 px-3 text-gray-500">DB Hub reading schema &amp; stats</td>
+              </tr>
+              <tr>
+                <td class="py-2 px-3 text-violet-400">DB Hub server</td>
+                <td class="py-2 px-3 text-emerald-400">MySQL server</td>
+                <td class="py-2 px-3 text-gray-400">3306</td>
+                <td class="py-2 px-3 text-gray-500">DB Hub reading schema &amp; stats</td>
+              </tr>
+              <tr class="bg-gray-900/40">
+                <td class="py-2 px-3 text-gray-400 italic">DB Hub server (optional)</td>
+                <td class="py-2 px-3 text-gray-400 italic">api.anthropic.com</td>
+                <td class="py-2 px-3 text-gray-500">443</td>
+                <td class="py-2 px-3 text-gray-500">AI features only — can be blocked if AI not used</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout-info not-prose">
+          <p class="text-xs text-indigo-300"><strong>No outbound database ports from user workstations.</strong> Users only need HTTP access to the DB Hub server. This is why DB Hub passes security reviews that block tools like DBeaver or DataGrip, which require direct database port access from each developer's laptop.</p>
+        </div>
+      </section>
+
+      <section id="enterprise-service">
+        <h3>Running DB Hub as a Windows domain service account</h3>
+        <p>For SQL Server environments using Windows Authentication, DB Hub needs to run under a domain account that SQL Server trusts. Here is the recommended setup.</p>
+
+        <h4>Step 1 — Create the service account</h4>
+        <p>Ask your AD admin to create a domain service account, for example <code>CORP\dbhub-svc</code>. It does not need any special AD rights — just a standard domain user account with a non-expiring password.</p>
+
+        <h4>Step 2 — Grant SQL Server access to the service account</h4>
+        <p>Run the following on each SQL Server that DB Hub will connect to (see the full privilege scripts in the next sections):</p>
+        <pre><code>-- Create login for the service account
+CREATE LOGIN [CORP\dbhub-svc] FROM WINDOWS;
+
+-- Grant read access to specific databases
+USE YourDatabase;
+CREATE USER [CORP\dbhub-svc] FOR LOGIN [CORP\dbhub-svc];
+ALTER ROLE db_datareader ADD MEMBER [CORP\dbhub-svc];
+
+-- Grant VIEW SERVER STATE for slow query dashboard
+GRANT VIEW SERVER STATE TO [CORP\dbhub-svc];</code></pre>
+
+        <h4>Step 3 — Run DB Hub under the service account</h4>
+
+        <p><strong>Option A — Windows Service (recommended for production)</strong></p>
+        <p>Install DB Hub as a Windows Service using NSSM (Non-Sucking Service Manager):</p>
+        <pre><code># Download nssm from nssm.cc, then:
+nssm install DBHub "C:\Python311\python.exe"
+nssm set DBHub AppParameters "-m uvicorn main:app --host 0.0.0.0 --port 8000"
+nssm set DBHub AppDirectory "C:\db-hub\backend"
+nssm set DBHub ObjectName "CORP\dbhub-svc" "ServiceAccountPassword"
+nssm set DBHub Start SERVICE_AUTO_START
+nssm start DBHub</code></pre>
+
+        <p><strong>Option B — Scheduled Task (simpler)</strong></p>
+        <p>Create a Scheduled Task in Windows Task Scheduler:</p>
+        <ul>
+          <li>Action: <code>python -m uvicorn main:app --host 0.0.0.0 --port 8000</code></li>
+          <li>Start in: <code>C:\db-hub\backend</code></li>
+          <li>Run as: <code>CORP\dbhub-svc</code></li>
+          <li>Trigger: At system startup</li>
+          <li>Check "Run whether user is logged in or not"</li>
+        </ul>
+
+        <div class="callout-info not-prose">
+          <p class="text-xs text-indigo-300"><strong>Identity note:</strong> When DB Hub connects to SQL Server using Windows Auth (blank username/password in the connection), SQL Server sees the identity of the process — <code>CORP\dbhub-svc</code>. All DB Hub users share this identity when connecting to SQL Server. Use per-user SQL credentials if you need per-user SQL Server audit trails.</p>
+        </div>
+
+        <h4>Running on Linux with Kerberos (advanced)</h4>
+        <p>If your DB Hub server is Linux but SQL Server uses Windows Auth, you can configure Kerberos authentication so the Linux server can authenticate to SQL Server as a domain account. This requires:</p>
+        <ul>
+          <li>Joining the Linux server to the domain (using <code>realm join</code> or <code>sssd</code>)</li>
+          <li>Configuring <code>/etc/krb5.conf</code> with your domain's KDC</li>
+          <li>Using <code>pymssql</code> with Kerberos credentials</li>
+        </ul>
+        <p>This is complex to set up. For most environments, <strong>running DB Hub on a Windows server and using a domain service account is the simpler path</strong>. Alternatively, create a SQL Auth login (see next section) and avoid Windows Auth entirely.</p>
+      </section>
+
+      <!-- ── PRIVILEGE SCRIPTS ── -->
+      <section id="enterprise-sql-pg">
+        <h3>PostgreSQL — Minimal privilege setup</h3>
+        <p>Create a dedicated read-only login for DB Hub. This account only needs the permissions DB Hub actually uses — no superuser, no write access.</p>
+
+        <pre><code>-- ─────────────────────────────────────────────────────────
+-- DB Hub — PostgreSQL minimal privilege setup
+-- Run as a superuser (e.g. postgres)
+-- Replace 'YourDatabase' with your actual database name
+-- Replace 'StrongPassword123!' with a secure password
+-- ─────────────────────────────────────────────────────────
+
+-- 1. Create the login
+CREATE USER dbhub_svc WITH PASSWORD 'StrongPassword123!';
+
+-- 2. Allow connection to the target database
+GRANT CONNECT ON DATABASE "YourDatabase" TO dbhub_svc;
+
+-- 3. Allow schema inspection
+\c YourDatabase
+GRANT USAGE ON SCHEMA public TO dbhub_svc;
+
+-- 4. Read-only on all current tables
+GRANT SELECT ON ALL TABLES IN SCHEMA public TO dbhub_svc;
+
+-- 5. Read-only on future tables automatically
+ALTER DEFAULT PRIVILEGES IN SCHEMA public
+  GRANT SELECT ON TABLES TO dbhub_svc;
+
+-- 6. Allow reading pg_stat_statements (slow query dashboard)
+--    This view requires the extension to be installed first:
+--    CREATE EXTENSION IF NOT EXISTS pg_stat_statements;
+GRANT SELECT ON pg_stat_statements TO dbhub_svc;
+
+-- 7. Allow reading system catalog views (schema browser, ERD)
+--    These are already readable by any login — no extra grant needed.
+
+-- ─────────────────────────────────────────────────────────
+-- What this account CAN do:
+--   ✓ Browse tables, columns, indexes, foreign keys
+--   ✓ View ER diagrams
+--   ✓ Generate AI documentation (reads schema metadata)
+--   ✓ View slow queries via pg_stat_statements
+--   ✓ Run EXPLAIN (no ANALYZE — that executes the query)
+--   ✓ Index advisor (reads catalog tables)
+--
+-- What this account CANNOT do:
+--   ✗ INSERT / UPDATE / DELETE any data
+--   ✗ Create or drop tables or indexes
+--   ✗ Access other schemas (unless granted separately)
+-- ─────────────────────────────────────────────────────────</code></pre>
+
+        <div class="callout-tip not-prose">
+          <p class="text-xs text-emerald-300"><strong>Multiple schemas:</strong> If your database uses non-public schemas (e.g. <code>sales</code>, <code>hr</code>), repeat the GRANT USAGE and GRANT SELECT steps for each schema. DB Hub's schema browser will show all schemas the user has access to.</p>
+        </div>
+
+        <h4>pg_hba.conf — allow the DB Hub server</h4>
+        <p>Add a line to <code>pg_hba.conf</code> that allows <code>dbhub_svc</code> to connect from the DB Hub server's IP:</p>
+        <pre><code># TYPE  DATABASE        USER         ADDRESS            METHOD
+host    YourDatabase    dbhub_svc    10.0.1.50/32       scram-sha-256
+#                                    ^ DB Hub server IP</code></pre>
+        <p>Then reload: <code>SELECT pg_reload_conf();</code></p>
+      </section>
+
+      <section id="enterprise-sql-mssql">
+        <h3>SQL Server — Minimal privilege setup</h3>
+        <p>Two options depending on your environment: SQL Authentication (works anywhere) or Windows Authentication (domain environments).</p>
+
+        <h4>Option A — SQL Authentication login</h4>
+        <pre><code>-- ─────────────────────────────────────────────────────────
+-- DB Hub — SQL Server minimal privilege setup (SQL Auth)
+-- Run as sysadmin. Replace placeholders as needed.
+-- ─────────────────────────────────────────────────────────
+
+USE master;
+
+-- 1. Create the login
+CREATE LOGIN dbhub_svc
+  WITH PASSWORD = 'StrongPassword123!',
+       CHECK_EXPIRATION = OFF,
+       CHECK_POLICY = ON;
+
+-- 2. Grant VIEW SERVER STATE (needed for slow query dashboard)
+--    This reads sys.dm_exec_query_stats and sys.dm_exec_sql_text
+GRANT VIEW SERVER STATE TO dbhub_svc;
+
+-- 3. Grant VIEW ANY DEFINITION (needed to read index & FK metadata)
+GRANT VIEW ANY DEFINITION TO dbhub_svc;
+
+-- 4. For each database DB Hub should access, run:
+USE YourDatabase;
+CREATE USER dbhub_svc FOR LOGIN dbhub_svc;
+
+-- Read-only data access
+ALTER ROLE db_datareader ADD MEMBER dbhub_svc;
+
+-- ─────────────────────────────────────────────────────────
+-- What this account CAN do:
+--   ✓ Browse tables, columns, indexes, foreign keys (sys.*)
+--   ✓ View ER diagrams
+--   ✓ Generate AI documentation (reads sys.columns, sys.tables)
+--   ✓ Slow query dashboard (sys.dm_exec_query_stats)
+--   ✓ Missing index advisor (sys.dm_db_missing_index_details)
+--   ✓ EXPLAIN via SET SHOWPLAN_ALL ON
+--
+-- What this account CANNOT do:
+--   ✗ INSERT / UPDATE / DELETE any data
+--   ✗ Create or drop objects
+--   ✗ Access other databases (unless user created there too)
+-- ─────────────────────────────────────────────────────────</code></pre>
+
+        <h4>Option B — Windows Authentication login (domain service account)</h4>
+        <pre><code>-- ─────────────────────────────────────────────────────────
+-- DB Hub — SQL Server minimal privilege setup (Windows Auth)
+-- Use when DB Hub runs as CORP\dbhub-svc on a domain machine
+-- ─────────────────────────────────────────────────────────
+
+USE master;
+
+-- 1. Create login from Windows account
+CREATE LOGIN [CORP\dbhub-svc] FROM WINDOWS;
+
+-- 2. Same server-level grants as SQL Auth
+GRANT VIEW SERVER STATE TO [CORP\dbhub-svc];
+GRANT VIEW ANY DEFINITION TO [CORP\dbhub-svc];
+
+-- 3. Per-database access
+USE YourDatabase;
+CREATE USER [CORP\dbhub-svc] FOR LOGIN [CORP\dbhub-svc];
+ALTER ROLE db_datareader ADD MEMBER [CORP\dbhub-svc];
+
+-- ─────────────────────────────────────────────────────────
+-- In DB Hub connection settings:
+--   Host     : 10.0.1.20   (SQL Server IP — not hostname\INSTANCE)
+--   Port     : 1433         (or dynamic port for named instances)
+--   Database : YourDatabase
+--   Username : (leave blank)
+--   Password : (leave blank)
+-- ─────────────────────────────────────────────────────────</code></pre>
+
+        <div class="callout-warn not-prose">
+          <p class="text-xs text-amber-300"><strong>Named instance port:</strong> SQL Server Express and named instances use a dynamic TCP port instead of 1433. Find it with: <code>(Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\Microsoft SQL Server\MSSQL16.SQLEXPRESS\MSSQLServer\SuperSocketNetLib\Tcp\IPAll").TcpDynamicPorts</code></p>
+        </div>
+
+        <h4>Verifying the grants work</h4>
+        <pre><code>-- Connect as dbhub_svc and run these to verify:
+SELECT name FROM sys.tables;                         -- schema browser
+SELECT * FROM sys.dm_exec_query_stats;              -- slow queries
+SELECT * FROM sys.dm_db_missing_index_details;      -- index advisor
+SET SHOWPLAN_ALL ON; SELECT 1; SET SHOWPLAN_ALL OFF; -- explain</code></pre>
+      </section>
+
+      <section id="enterprise-sql-mysql">
+        <h3>MySQL — Minimal privilege setup</h3>
+        <pre><code>-- ─────────────────────────────────────────────────────────
+-- DB Hub — MySQL minimal privilege setup
+-- Run as root or a user with GRANT OPTION
+-- Replace placeholders as needed
+-- ─────────────────────────────────────────────────────────
+
+-- 1. Create the user
+--    Replace '10.0.1.50' with your DB Hub server's IP
+--    Use '%' to allow from any host (less secure)
+CREATE USER 'dbhub_svc'@'10.0.1.50' IDENTIFIED BY 'StrongPassword123!';
+
+-- 2. Read-only access to your application database
+GRANT SELECT ON YourDatabase.* TO 'dbhub_svc'@'10.0.1.50';
+
+-- 3. Read information_schema (schema browser, ERD, index advisor)
+--    information_schema is readable by all users — no extra grant needed
+
+-- 4. Read performance_schema (slow query dashboard)
+GRANT SELECT ON performance_schema.events_statements_summary_by_digest
+  TO 'dbhub_svc'@'10.0.1.50';
+
+-- 5. Apply changes
+FLUSH PRIVILEGES;
+
+-- ─────────────────────────────────────────────────────────
+-- What this account CAN do:
+--   ✓ Browse tables, columns, indexes, foreign keys
+--   ✓ View ER diagrams
+--   ✓ Generate AI documentation
+--   ✓ Slow query dashboard (performance_schema)
+--   ✓ Index advisor (information_schema.STATISTICS, KEY_COLUMN_USAGE)
+--   ✓ EXPLAIN queries
+--
+-- What this account CANNOT do:
+--   ✗ INSERT / UPDATE / DELETE any data
+--   ✗ Create or drop tables or indexes
+--   ✗ Access other databases
+-- ─────────────────────────────────────────────────────────</code></pre>
+
+        <div class="callout-tip not-prose">
+          <p class="text-xs text-emerald-300"><strong>Multiple databases:</strong> Repeat the GRANT SELECT statement for each database DB Hub should access. Use <code>GRANT SELECT ON *.* TO 'dbhub_svc'@'10.0.1.50';</code> only if you want DB Hub to see all databases on the server.</p>
+        </div>
+
+        <h4>Verify the grants work</h4>
+        <pre><code>-- Connect as dbhub_svc and run:
+SHOW TABLES FROM YourDatabase;
+SELECT TABLE_NAME FROM information_schema.TABLES WHERE TABLE_SCHEMA = 'YourDatabase';
+SELECT DIGEST_TEXT, COUNT_STAR
+  FROM performance_schema.events_statements_summary_by_digest LIMIT 5;</code></pre>
+
+        <div class="callout-info not-prose">
+          <p class="text-xs text-indigo-300"><strong>MySQL 8.0 auth note:</strong> If your application cannot connect after creating the user, it may be a caching_sha2_password vs mysql_native_password mismatch. Run: <code>ALTER USER 'dbhub_svc'@'10.0.1.50' IDENTIFIED WITH mysql_native_password BY 'StrongPassword123!';</code></p>
+        </div>
+      </section>
+
+      <!-- ── ENVIRONMENT VARS ── -->
+      <section id="env">
+        <h2>Environment Variables</h2>
+        <div class="not-prose overflow-x-auto">
+          <table class="w-full text-xs border-collapse">
+            <thead><tr class="border-b border-gray-800"><th class="text-left py-2 px-3 text-gray-500 font-medium w-48">Variable</th><th class="text-left py-2 px-3 text-gray-500 font-medium">Required</th><th class="text-left py-2 px-3 text-gray-500 font-medium">Description</th></tr></thead>
+            <tbody class="divide-y divide-gray-800/60">
+              <tr><td class="py-2 px-3 text-violet-400 font-mono">SECRET_KEY</td><td class="py-2 px-3 text-red-400 text-xs font-semibold">Yes</td><td class="py-2 px-3 text-gray-400">JWT signing key. 64 random hex characters. Never change after first run.</td></tr>
+              <tr><td class="py-2 px-3 text-violet-400 font-mono">ENCRYPTION_KEY</td><td class="py-2 px-3 text-red-400 text-xs font-semibold">Yes</td><td class="py-2 px-3 text-gray-400">Fernet key for encrypting stored DB passwords. Generate with Python cryptography library. Never change after first run.</td></tr>
+              <tr><td class="py-2 px-3 text-violet-400 font-mono">ANTHROPIC_API_KEY</td><td class="py-2 px-3 text-gray-500 text-xs">Optional</td><td class="py-2 px-3 text-gray-400">Enables AI Documentation and AI Assistant modules. Get from console.anthropic.com.</td></tr>
+              <tr><td class="py-2 px-3 text-violet-400 font-mono">DATABASE_URL</td><td class="py-2 px-3 text-gray-500 text-xs">Optional</td><td class="py-2 px-3 text-gray-400">SQLite path for DB Hub's own data. Defaults to <code>sqlite:///./db_hub.sqlite3</code>. Change to move the database file.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ── ROLES ── -->
+      <section id="roles">
+        <h2>Roles &amp; Permissions</h2>
+        <div class="not-prose overflow-x-auto">
+          <table class="w-full text-xs border-collapse">
+            <thead><tr class="border-b border-gray-800"><th class="text-left py-2 px-3 text-gray-500 font-medium">Action</th><th class="text-center py-2 px-3 text-indigo-400 font-semibold">Admin</th><th class="text-center py-2 px-3 text-purple-400 font-semibold">Editor</th><th class="text-center py-2 px-3 text-slate-400 font-semibold">Viewer</th></tr></thead>
+            <tbody class="divide-y divide-gray-800/60">
+              <tr><td class="py-2 px-3 text-gray-400">Browse schema</td><td class="py-2 px-3 text-center text-emerald-400">✓</td><td class="py-2 px-3 text-center text-emerald-400">✓</td><td class="py-2 px-3 text-center text-emerald-400">✓</td></tr>
+              <tr><td class="py-2 px-3 text-gray-400">View ERD &amp; docs</td><td class="py-2 px-3 text-center text-emerald-400">✓</td><td class="py-2 px-3 text-center text-emerald-400">✓</td><td class="py-2 px-3 text-center text-emerald-400">✓</td></tr>
+              <tr><td class="py-2 px-3 text-gray-400">View snapshots</td><td class="py-2 px-3 text-center text-emerald-400">✓</td><td class="py-2 px-3 text-center text-emerald-400">✓</td><td class="py-2 px-3 text-center text-emerald-400">✓</td></tr>
+              <tr><td class="py-2 px-3 text-gray-400">Add connections</td><td class="py-2 px-3 text-center text-emerald-400">✓</td><td class="py-2 px-3 text-center text-emerald-400">✓</td><td class="py-2 px-3 text-center text-red-500">✗</td></tr>
+              <tr><td class="py-2 px-3 text-gray-400">Generate AI docs</td><td class="py-2 px-3 text-center text-emerald-400">✓</td><td class="py-2 px-3 text-center text-emerald-400">✓</td><td class="py-2 px-3 text-center text-red-500">✗</td></tr>
+              <tr><td class="py-2 px-3 text-gray-400">Take snapshots</td><td class="py-2 px-3 text-center text-emerald-400">✓</td><td class="py-2 px-3 text-center text-emerald-400">✓</td><td class="py-2 px-3 text-center text-red-500">✗</td></tr>
+              <tr><td class="py-2 px-3 text-gray-400">Run query optimizer</td><td class="py-2 px-3 text-center text-emerald-400">✓</td><td class="py-2 px-3 text-center text-emerald-400">✓</td><td class="py-2 px-3 text-center text-red-500">✗</td></tr>
+              <tr><td class="py-2 px-3 text-gray-400">Delete connections/docs</td><td class="py-2 px-3 text-center text-emerald-400">✓</td><td class="py-2 px-3 text-center text-red-500">✗</td><td class="py-2 px-3 text-center text-red-500">✗</td></tr>
+              <tr><td class="py-2 px-3 text-gray-400">Manage users</td><td class="py-2 px-3 text-center text-emerald-400">✓</td><td class="py-2 px-3 text-center text-red-500">✗</td><td class="py-2 px-3 text-center text-red-500">✗</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ── TROUBLESHOOTING ── -->
+      <section id="troubleshoot">
+        <h2>Troubleshooting</h2>
+
+        <h3>"Unable to connect" — PostgreSQL</h3>
+        <ul>
+          <li>Confirm PostgreSQL is running: <code>pg_isready -h localhost -p 5432</code></li>
+          <li>Check <code>pg_hba.conf</code> allows connections from the DB Hub host</li>
+          <li>Make sure the database name is correct (not the server hostname)</li>
+          <li>Try connecting with psql using the same credentials to isolate the issue</li>
+        </ul>
+
+        <h3>"Unable to connect" — SQL Server</h3>
+        <ul>
+          <li>Ensure TCP/IP is enabled in SQL Server Configuration Manager</li>
+          <li>For named instances (SQLEXPRESS), use the dynamic port instead of 1433 — see the <a href="#sqlserver">SQL Server setup section</a> above</li>
+          <li>Windows Firewall may be blocking port — add an inbound rule for the port</li>
+          <li>For Windows Auth, DB Hub must run on the same Windows machine or domain</li>
+        </ul>
+
+        <h3>"Unable to connect" — MySQL</h3>
+        <ul>
+          <li>Check MySQL is running: <code>mysqladmin -u root -p status</code></li>
+          <li>Ensure the user has remote access: <code>GRANT ALL ON mydb.* TO 'user'@'%';</code></li>
+          <li>Check <code>bind-address</code> in <code>my.cnf</code> — set to <code>0.0.0.0</code> if connecting remotely</li>
+        </ul>
+
+        <h3>AI features not working</h3>
+        <ul>
+          <li>Confirm <code>ANTHROPIC_API_KEY</code> is set in <code>backend/.env</code></li>
+          <li>Restart the backend after changing <code>.env</code></li>
+          <li>Check your Anthropic account has remaining credits</li>
+          <li>The key should start with <code>sk-ant-</code></li>
+        </ul>
+
+        <h3>Slow query dashboard shows no data — PostgreSQL</h3>
+        <ul>
+          <li>Run: <code>CREATE EXTENSION IF NOT EXISTS pg_stat_statements;</code></li>
+          <li>Add <code>pg_stat_statements</code> to <code>shared_preload_libraries</code> in <code>postgresql.conf</code> and restart</li>
+          <li>Execute some queries first — the view only shows queries run since the extension was enabled</li>
+        </ul>
+
+        <h3>Port 8000 already in use</h3>
+        <pre><code># Windows
+netstat -ano | findstr :8000
+Stop-Process -Id &lt;PID&gt; -Force
+
+# Linux
+lsof -i :8000
+kill -9 &lt;PID&gt;</code></pre>
+        <p>Or start DB Hub on a different port: <code>uvicorn main:app --port 8080</code></p>
+      </section>
+
+      <!-- ── FAQ ── -->
+      <section id="faq">
+        <h2>FAQ</h2>
+
+        <h3>Can I run DB Hub behind a reverse proxy (nginx)?</h3>
+        <p>Yes. Point nginx to <code>http://localhost:8000</code>. Make sure to set <code>proxy_set_header Host $host;</code> and <code>proxy_set_header X-Real-IP $remote_addr;</code>. For WebSocket support (not currently required), add the appropriate upgrade headers.</p>
+
+        <h3>Can I use HTTPS?</h3>
+        <p>Run DB Hub behind nginx or Caddy with an SSL certificate. The FastAPI backend itself speaks plain HTTP — the reverse proxy handles TLS termination.</p>
+
+        <h3>How do I back up DB Hub's data?</h3>
+        <p>Copy the <code>db_hub.sqlite3</code> file (in the <code>backend/</code> folder by default) and your <code>.env</code> file. That's everything. Restore by placing them back in the same locations.</p>
+
+        <h3>Can I connect databases that are on a different server?</h3>
+        <p>Yes — DB Hub connects over the network. The database just needs to be reachable from the machine running DB Hub. Use the database server's IP or hostname in the Host field.</p>
+
+        <h3>Does DB Hub modify my database?</h3>
+        <p>No. DB Hub is read-only with respect to your databases. It reads schema metadata and query statistics — it never writes to your application databases. The only database it writes to is its own SQLite file.</p>
+
+        <h3>What happens if I change my ENCRYPTION_KEY?</h3>
+        <p>All stored database passwords become unreadable. Do not change the ENCRYPTION_KEY after the first run unless you plan to re-enter all connection passwords.</p>
+
+        <h3>How many database connections can I store?</h3>
+        <p>Unlimited. You can save as many PostgreSQL, SQL Server, and MySQL connections as your team needs — mix and match freely.</p>
+      </section>
+
+      <!-- Footer spacer -->
+      <div class="h-24 border-t border-gray-800/60 mt-10 pt-8">
+        <p class="text-xs text-gray-600">DB Hub v1.0 · For support email <a href="mailto:rajeshguntupalli59@gmail.com" class="text-violet-500">rajeshguntupalli59@gmail.com</a></p>
+      </div>
+
+    </main>
+  </div>
+
+</body>
+</html>

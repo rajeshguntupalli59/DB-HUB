@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DB Hub — The All-in-One Database Platform for DBA Teams</title>
+  <meta name="description" content="8 professional database tools in one self-hosted platform. Schema browser, AI docs, ER diagrams, query optimizer, change tracker, and more — for PostgreSQL, SQL Server, and MySQL." />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    html { scroll-behavior: smooth; }
+    .gradient-text {
+      background: linear-gradient(135deg, #a78bfa, #6366f1, #38bdf8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .card-hover { transition: transform 0.2s ease, border-color 0.2s ease; }
+    .card-hover:hover { transform: translateY(-3px); }
+    .glow { box-shadow: 0 0 80px rgba(99,102,241,0.15); }
+    .module-icon { transition: transform 0.2s ease; }
+    .module-card:hover .module-icon { transform: scale(1.1); }
+    .price-card { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+    .price-card:hover { transform: translateY(-4px); }
+    .price-popular { box-shadow: 0 0 0 2px #7c3aed, 0 20px 60px rgba(124,58,237,0.2); }
+  </style>
+</head>
+<body class="bg-gray-950 text-gray-100 font-sans antialiased">
+
+  <!-- ── Nav ── -->
+  <nav class="fixed top-0 left-0 right-0 z-50 border-b border-gray-800/60 bg-gray-950/90 backdrop-blur-md">
+    <div class="max-w-6xl mx-auto px-6 h-14 flex items-center justify-between">
+      <div class="flex items-center gap-2.5">
+        <div class="w-7 h-7 rounded-lg bg-gradient-to-br from-violet-500 to-indigo-600 flex items-center justify-center">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 7v10c0 2.21 3.58 4 8 4s8-1.79 8-4V7"/>
+            <path d="M4 7c0 2.21 3.58 4 8 4s8-1.79 8-4"/>
+            <path d="M4 7c0-2.21 3.58-4 8-4s8 1.79 8 4"/>
+          </svg>
+        </div>
+        <span class="text-sm font-bold text-white tracking-tight">DB Hub</span>
+        <span class="text-[10px] text-gray-600 font-medium mt-0.5">v1.0</span>
+      </div>
+      <div class="hidden md:flex items-center gap-6 text-xs text-gray-400">
+        <a href="#modules"   class="hover:text-white transition">Modules</a>
+        <a href="#databases" class="hover:text-white transition">Databases</a>
+        <a href="#security"  class="hover:text-white transition">Security</a>
+        <a href="#pricing"   class="hover:text-white transition">Pricing</a>
+        <a href="#faq"       class="hover:text-white transition">FAQ</a>
+      </div>
+      <a href="#pricing" class="text-xs font-semibold bg-violet-600 hover:bg-violet-500 text-white px-4 py-2 rounded-lg transition">
+        Get DB Hub
+      </a>
+    </div>
+  </nav>
+
+  <!-- ── Hero ── -->
+  <section class="pt-32 pb-28 px-6 text-center relative overflow-hidden">
+    <!-- Background glow -->
+    <div class="absolute inset-0 pointer-events-none">
+      <div class="absolute top-24 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-violet-600/10 rounded-full blur-3xl"></div>
+    </div>
+    <div class="max-w-4xl mx-auto relative">
+      <div class="inline-flex items-center gap-2 bg-violet-950/60 border border-violet-800/40 rounded-full px-4 py-1.5 mb-8">
+        <span class="w-1.5 h-1.5 rounded-full bg-violet-400 animate-pulse"></span>
+        <span class="text-xs text-violet-300 font-medium">Self-hosted · One-time price · Your servers, your data</span>
+      </div>
+      <h1 class="text-5xl md:text-6xl font-extrabold tracking-tight mb-6 leading-tight">
+        Every DBA tool your team<br />
+        <span class="gradient-text">needs in one platform</span>
+      </h1>
+      <p class="text-lg text-gray-400 max-w-2xl mx-auto mb-10 leading-relaxed">
+        DB Hub is a self-hosted database management platform with <strong class="text-gray-200">8 professional modules</strong> — schema browsing, AI documentation, ER diagrams, query optimization, change tracking, and more — supporting <strong class="text-gray-200">PostgreSQL, SQL Server, and MySQL</strong> under one roof.
+      </p>
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+        <a href="#pricing" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-violet-600 hover:bg-violet-500 text-white font-semibold px-8 py-3.5 rounded-xl text-sm transition shadow-lg shadow-violet-900/40">
+          Buy once, use forever
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        </a>
+        <a href="#modules" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 border border-gray-700 hover:border-gray-500 text-gray-300 hover:text-white font-medium px-8 py-3.5 rounded-xl text-sm transition">
+          See all 8 modules
+        </a>
+      </div>
+
+      <!-- Stats row -->
+      <div class="mt-16 grid grid-cols-3 gap-6 max-w-lg mx-auto">
+        <div class="text-center">
+          <p class="text-2xl font-bold text-white">8</p>
+          <p class="text-xs text-gray-500 mt-1">Professional modules</p>
+        </div>
+        <div class="text-center border-x border-gray-800">
+          <p class="text-2xl font-bold text-white">3</p>
+          <p class="text-xs text-gray-500 mt-1">Database engines</p>
+        </div>
+        <div class="text-center">
+          <p class="text-2xl font-bold text-white">$0</p>
+          <p class="text-xs text-gray-500 mt-1">Monthly fees</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Problem / Value ── -->
+  <section class="py-20 px-6 border-t border-gray-800/60">
+    <div class="max-w-5xl mx-auto">
+      <div class="grid md:grid-cols-2 gap-12 items-center">
+        <div>
+          <p class="text-xs font-semibold text-violet-400 uppercase tracking-widest mb-3">The Problem</p>
+          <h2 class="text-3xl font-bold text-white mb-5 leading-snug">Your team is juggling too many tools</h2>
+          <div class="space-y-4 text-sm text-gray-400 leading-relaxed">
+            <p>One tool for schema browsing. Another for generating docs. A third for query analysis. A fourth for ERDs. Then you need something for change tracking, something else for the AI assistant — and none of them talk to each other.</p>
+            <p>Each tool has its own connection setup, its own UI, its own learning curve — and most of them phone home to someone else's cloud.</p>
+          </div>
+        </div>
+        <div>
+          <p class="text-xs font-semibold text-emerald-400 uppercase tracking-widest mb-3">The Solution</p>
+          <h2 class="text-3xl font-bold text-white mb-5 leading-snug">One platform, one connection, everything</h2>
+          <div class="space-y-3">
+            <div class="flex items-start gap-3">
+              <div class="w-5 h-5 rounded-full bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center flex-shrink-0 mt-0.5">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+              </div>
+              <p class="text-sm text-gray-300">Connect once — all 8 modules share that connection</p>
+            </div>
+            <div class="flex items-start gap-3">
+              <div class="w-5 h-5 rounded-full bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center flex-shrink-0 mt-0.5">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+              </div>
+              <p class="text-sm text-gray-300">Multi-user with role-based access (admin / editor / viewer)</p>
+            </div>
+            <div class="flex items-start gap-3">
+              <div class="w-5 h-5 rounded-full bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center flex-shrink-0 mt-0.5">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+              </div>
+              <p class="text-sm text-gray-300">Runs on your own server — zero data leaves your network</p>
+            </div>
+            <div class="flex items-start gap-3">
+              <div class="w-5 h-5 rounded-full bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center flex-shrink-0 mt-0.5">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+              </div>
+              <p class="text-sm text-gray-300">One-time payment — no subscriptions, no per-seat pricing</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 8 Modules ── -->
+  <section id="modules" class="py-24 px-6 border-t border-gray-800/60">
+    <div class="max-w-6xl mx-auto">
+      <div class="text-center mb-14">
+        <p class="text-xs font-semibold text-violet-400 uppercase tracking-widest mb-3">8 Modules Included</p>
+        <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">Everything your team needs, nothing you don't</h2>
+        <p class="text-gray-400 text-sm max-w-xl mx-auto">Every module ships in the same install. No add-ons, no upgrades, no feature gates.</p>
+      </div>
+
+      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+
+        <!-- 1 -->
+        <div class="module-card card-hover bg-gray-900 border border-gray-800 rounded-2xl p-5 group">
+          <div class="module-icon w-10 h-10 rounded-xl bg-indigo-500/15 border border-indigo-500/25 flex items-center justify-center mb-4">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#818cf8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
+            </svg>
+          </div>
+          <p class="text-sm font-semibold text-white mb-1.5">Team &amp; Access</p>
+          <p class="text-xs text-gray-500 leading-relaxed">Multi-user platform with admin, editor, and viewer roles. Invite your whole DBA team.</p>
+        </div>
+
+        <!-- 2 -->
+        <div class="module-card card-hover bg-gray-900 border border-gray-800 rounded-2xl p-5 group">
+          <div class="module-icon w-10 h-10 rounded-xl bg-emerald-500/15 border border-emerald-500/25 flex items-center justify-center mb-4">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 7v10c0 2.21 3.58 4 8 4s8-1.79 8-4V7"/>
+              <path d="M4 7c0 2.21 3.58 4 8 4s8-1.79 8-4"/>
+              <path d="M4 7c0-2.21 3.58-4 8-4s8 1.79 8 4"/>
+            </svg>
+          </div>
+          <p class="text-sm font-semibold text-white mb-1.5">Connection Manager</p>
+          <p class="text-xs text-gray-500 leading-relaxed">Store unlimited PostgreSQL, SQL Server, and MySQL connections with Fernet-encrypted passwords.</p>
+        </div>
+
+        <!-- 3 -->
+        <div class="module-card card-hover bg-gray-900 border border-gray-800 rounded-2xl p-5 group">
+          <div class="module-icon w-10 h-10 rounded-xl bg-amber-500/15 border border-amber-500/25 flex items-center justify-center mb-4">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18"/>
+            </svg>
+          </div>
+          <p class="text-sm font-semibold text-white mb-1.5">Schema Browser</p>
+          <p class="text-xs text-gray-500 leading-relaxed">Explore every table, column, index, and foreign key across your databases in real time.</p>
+        </div>
+
+        <!-- 4 -->
+        <div class="module-card card-hover bg-gray-900 border border-gray-800 rounded-2xl p-5 group">
+          <div class="module-icon w-10 h-10 rounded-xl bg-cyan-500/15 border border-cyan-500/25 flex items-center justify-center mb-4">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#22d3ee" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+              <polyline points="14 2 14 8 20 8"/>
+              <line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>
+            </svg>
+          </div>
+          <p class="text-sm font-semibold text-white mb-1.5">AI Documentation</p>
+          <p class="text-xs text-gray-500 leading-relaxed">Generate rich markdown docs for every table using Claude AI. Export and share with your team instantly.</p>
+        </div>
+
+        <!-- 5 -->
+        <div class="module-card card-hover bg-gray-900 border border-gray-800 rounded-2xl p-5 group">
+          <div class="module-icon w-10 h-10 rounded-xl bg-purple-500/15 border border-purple-500/25 flex items-center justify-center mb-4">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#a855f7" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="3" width="6" height="6" rx="1"/><rect x="16" y="3" width="6" height="6" rx="1"/>
+              <rect x="9" y="15" width="6" height="6" rx="1"/>
+              <path d="M5 9v3m0 0h7m-7 0v3m14-6v3m0 0h-7"/>
+            </svg>
+          </div>
+          <p class="text-sm font-semibold text-white mb-1.5">ER Diagram</p>
+          <p class="text-xs text-gray-500 leading-relaxed">Interactive visual schema map. Drag tables, follow FK relationships, and understand your data model at a glance.</p>
+        </div>
+
+        <!-- 6 -->
+        <div class="module-card card-hover bg-gray-900 border border-gray-800 rounded-2xl p-5 group">
+          <div class="module-icon w-10 h-10 rounded-xl bg-orange-500/15 border border-orange-500/25 flex items-center justify-center mb-4">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fb923c" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+            </svg>
+          </div>
+          <p class="text-sm font-semibold text-white mb-1.5">Change Tracker</p>
+          <p class="text-xs text-gray-500 leading-relaxed">Snapshot your schema over time. Diff any two snapshots to see exactly what changed between deploys.</p>
+        </div>
+
+        <!-- 7 -->
+        <div class="module-card card-hover bg-gray-900 border border-gray-800 rounded-2xl p-5 group">
+          <div class="module-icon w-10 h-10 rounded-xl bg-pink-500/15 border border-pink-500/25 flex items-center justify-center mb-4">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ec4899" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09Z"/>
+            </svg>
+          </div>
+          <p class="text-sm font-semibold text-white mb-1.5">AI Assistant</p>
+          <p class="text-xs text-gray-500 leading-relaxed">Ask questions about your schema in plain English. Get index suggestions, query help, and schema analysis.</p>
+        </div>
+
+        <!-- 8 -->
+        <div class="module-card card-hover bg-gray-900 border border-violet-700/40 rounded-2xl p-5 group relative overflow-hidden">
+          <div class="absolute top-2 right-2 text-[9px] font-bold px-1.5 py-0.5 rounded bg-violet-600/30 text-violet-300 border border-violet-600/40">NEW</div>
+          <div class="module-icon w-10 h-10 rounded-xl bg-violet-500/15 border border-violet-500/25 flex items-center justify-center mb-4">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"/>
+            </svg>
+          </div>
+          <p class="text-sm font-semibold text-white mb-1.5">Query Optimizer</p>
+          <p class="text-xs text-gray-500 leading-relaxed">EXPLAIN visualizer, missing index advisor, slow query dashboard, and SQL anti-pattern rewriter — all in one tab.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Query Optimizer Deep Dive ── -->
+  <section class="py-20 px-6 bg-gray-900/40 border-y border-gray-800/60">
+    <div class="max-w-5xl mx-auto">
+      <div class="text-center mb-12">
+        <p class="text-xs font-semibold text-violet-400 uppercase tracking-widest mb-3">Module Spotlight</p>
+        <h2 class="text-3xl font-bold text-white mb-4">Query Optimizer — 4 tools in one</h2>
+        <p class="text-gray-400 text-sm max-w-xl mx-auto">The same power as a dedicated $149 tool, built right into DB Hub.</p>
+      </div>
+      <div class="grid md:grid-cols-2 gap-5">
+        <div class="bg-gray-900 border border-gray-800 rounded-2xl p-6">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="w-8 h-8 rounded-lg bg-blue-500/15 border border-blue-500/25 flex items-center justify-center">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3h18v18H3z" opacity=".3"/><path d="M8 9h8M8 13h5"/></svg>
+            </div>
+            <p class="text-sm font-semibold text-white">EXPLAIN Visualizer</p>
+          </div>
+          <p class="text-xs text-gray-400 leading-relaxed">Paste any SQL and get an interactive execution plan tree. Costs, row estimates, warnings for seq scans and expensive joins. Supports ANALYZE and BUFFERS modes for PostgreSQL.</p>
+        </div>
+        <div class="bg-gray-900 border border-gray-800 rounded-2xl p-6">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="w-8 h-8 rounded-lg bg-emerald-500/15 border border-emerald-500/25 flex items-center justify-center">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="m2 17 10 5 10-5"/><path d="m2 12 10 5 10-5"/></svg>
+            </div>
+            <p class="text-sm font-semibold text-white">Index Advisor</p>
+          </div>
+          <p class="text-xs text-gray-400 leading-relaxed">Reads live catalog data to find FK columns without indexes, infers missing indexes from your WHERE and ORDER BY clauses. Generates ready-to-run CREATE INDEX DDL.</p>
+        </div>
+        <div class="bg-gray-900 border border-gray-800 rounded-2xl p-6">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="w-8 h-8 rounded-lg bg-amber-500/15 border border-amber-500/25 flex items-center justify-center">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            </div>
+            <p class="text-sm font-semibold text-white">Slow Query Dashboard</p>
+          </div>
+          <p class="text-xs text-gray-400 leading-relaxed">Surfaces your worst queries sorted by mean execution time. Powered by pg_stat_statements, sys.dm_exec_query_stats, and MySQL performance_schema — no agents needed.</p>
+        </div>
+        <div class="bg-gray-900 border border-gray-800 rounded-2xl p-6">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="w-8 h-8 rounded-lg bg-violet-500/15 border border-violet-500/25 flex items-center justify-center">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+            </div>
+            <p class="text-sm font-semibold text-white">SQL Rewriter</p>
+          </div>
+          <p class="text-xs text-gray-400 leading-relaxed">8 rule-based checks: SELECT *, OR in WHERE, leading LIKE wildcards, NOT IN subqueries, implicit cross joins, large OFFSET, and more — with suggested rewrites.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Database Support ── -->
+  <section id="databases" class="py-24 px-6">
+    <div class="max-w-5xl mx-auto">
+      <div class="text-center mb-12">
+        <p class="text-xs font-semibold text-violet-400 uppercase tracking-widest mb-3">Database Support</p>
+        <h2 class="text-3xl font-bold text-white mb-4">Works with your stack</h2>
+        <p class="text-gray-400 text-sm max-w-xl mx-auto">All 8 modules work across all 3 database engines. No feature gaps between engines.</p>
+      </div>
+      <div class="grid md:grid-cols-3 gap-5">
+        <div class="bg-gray-900 border border-gray-800 rounded-2xl p-6 text-center card-hover">
+          <div class="w-12 h-12 rounded-xl bg-sky-500/15 border border-sky-500/25 flex items-center justify-center mx-auto mb-4">
+            <span class="text-lg font-black text-sky-400">PG</span>
+          </div>
+          <p class="text-sm font-semibold text-white mb-2">PostgreSQL</p>
+          <ul class="text-xs text-gray-500 space-y-1 text-left mt-3">
+            <li class="flex items-center gap-2"><span class="text-emerald-500">✓</span> Versions 12 – 17</li>
+            <li class="flex items-center gap-2"><span class="text-emerald-500">✓</span> EXPLAIN (FORMAT JSON, ANALYZE, BUFFERS)</li>
+            <li class="flex items-center gap-2"><span class="text-emerald-500">✓</span> pg_stat_statements slow queries</li>
+            <li class="flex items-center gap-2"><span class="text-emerald-500">✓</span> information_schema + pg_indexes catalog</li>
+          </ul>
+        </div>
+        <div class="bg-gray-900 border border-gray-800 rounded-2xl p-6 text-center card-hover">
+          <div class="w-12 h-12 rounded-xl bg-orange-500/15 border border-orange-500/25 flex items-center justify-center mx-auto mb-4">
+            <span class="text-xs font-black text-orange-400 leading-none">SQL<br/>SRV</span>
+          </div>
+          <p class="text-sm font-semibold text-white mb-2">SQL Server</p>
+          <ul class="text-xs text-gray-500 space-y-1 text-left mt-3">
+            <li class="flex items-center gap-2"><span class="text-emerald-500">✓</span> 2017, 2019, 2022 (incl. Express)</li>
+            <li class="flex items-center gap-2"><span class="text-emerald-500">✓</span> Windows Auth &amp; SQL Auth</li>
+            <li class="flex items-center gap-2"><span class="text-emerald-500">✓</span> sys.dm_exec_query_stats DMV</li>
+            <li class="flex items-center gap-2"><span class="text-emerald-500">✓</span> sys.dm_db_missing_index_details DMV</li>
+          </ul>
+        </div>
+        <div class="bg-gray-900 border border-gray-800 rounded-2xl p-6 text-center card-hover">
+          <div class="w-12 h-12 rounded-xl bg-amber-500/15 border border-amber-500/25 flex items-center justify-center mx-auto mb-4">
+            <span class="text-sm font-black text-amber-400">MySQL</span>
+          </div>
+          <p class="text-sm font-semibold text-white mb-2">MySQL</p>
+          <ul class="text-xs text-gray-500 space-y-1 text-left mt-3">
+            <li class="flex items-center gap-2"><span class="text-emerald-500">✓</span> MySQL 8.0+ / 8.4 LTS</li>
+            <li class="flex items-center gap-2"><span class="text-emerald-500">✓</span> EXPLAIN FORMAT=JSON plan tree</li>
+            <li class="flex items-center gap-2"><span class="text-emerald-500">✓</span> performance_schema slow queries</li>
+            <li class="flex items-center gap-2"><span class="text-emerald-500">✓</span> information_schema index advisor</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Security ── -->
+  <section id="security" class="py-20 px-6 bg-gray-900/40 border-y border-gray-800/60">
+    <div class="max-w-5xl mx-auto">
+      <div class="grid md:grid-cols-2 gap-12 items-center">
+        <div>
+          <p class="text-xs font-semibold text-violet-400 uppercase tracking-widest mb-3">Security &amp; Privacy</p>
+          <h2 class="text-3xl font-bold text-white mb-5 leading-snug">Your data never leaves your network</h2>
+          <p class="text-gray-400 text-sm leading-relaxed mb-6">DB Hub runs entirely on your own infrastructure. No cloud sync, no telemetry, no external APIs except the AI features (which use your own API key). Your database credentials and schema data stay inside your network perimeter.</p>
+          <div class="space-y-3">
+            <div class="flex items-center gap-3 text-sm text-gray-300">
+              <span class="text-emerald-400">✓</span> Fernet (AES-128-CBC) encrypted credential storage
+            </div>
+            <div class="flex items-center gap-3 text-sm text-gray-300">
+              <span class="text-emerald-400">✓</span> JWT-based session tokens, 24-hour expiry
+            </div>
+            <div class="flex items-center gap-3 text-sm text-gray-300">
+              <span class="text-emerald-400">✓</span> Role-based access control — limit who sees what
+            </div>
+            <div class="flex items-center gap-3 text-sm text-gray-300">
+              <span class="text-emerald-400">✓</span> SQLite app database — no second DB server required
+            </div>
+            <div class="flex items-center gap-3 text-sm text-gray-300">
+              <span class="text-emerald-400">✓</span> Bring your own Anthropic API key for AI features
+            </div>
+          </div>
+        </div>
+        <div class="bg-gray-900 border border-gray-800 rounded-2xl p-6">
+          <p class="text-xs text-gray-600 uppercase tracking-widest font-semibold mb-4">What leaves your server</p>
+          <div class="space-y-3">
+            <div class="flex items-start gap-3 p-3 rounded-lg bg-red-500/5 border border-red-500/15">
+              <span class="text-red-400 text-xs mt-0.5">✗</span>
+              <p class="text-xs text-gray-400">Your database schema or data</p>
+            </div>
+            <div class="flex items-start gap-3 p-3 rounded-lg bg-red-500/5 border border-red-500/15">
+              <span class="text-red-400 text-xs mt-0.5">✗</span>
+              <p class="text-xs text-gray-400">Your stored credentials</p>
+            </div>
+            <div class="flex items-start gap-3 p-3 rounded-lg bg-red-500/5 border border-red-500/15">
+              <span class="text-red-400 text-xs mt-0.5">✗</span>
+              <p class="text-xs text-gray-400">Usage analytics or telemetry</p>
+            </div>
+            <div class="flex items-start gap-3 p-3 rounded-lg bg-emerald-500/5 border border-emerald-500/15">
+              <span class="text-emerald-400 text-xs mt-0.5">✓</span>
+              <p class="text-xs text-gray-400">Only: AI requests to Anthropic's API (using your key, only when you use AI features)</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Who it's for ── -->
+  <section class="py-24 px-6">
+    <div class="max-w-5xl mx-auto">
+      <div class="text-center mb-12">
+        <p class="text-xs font-semibold text-violet-400 uppercase tracking-widest mb-3">Who It's For</p>
+        <h2 class="text-3xl font-bold text-white mb-4">Built for teams who take their databases seriously</h2>
+      </div>
+      <div class="grid md:grid-cols-3 gap-5">
+        <div class="bg-gray-900 border border-gray-800 rounded-2xl p-6 card-hover">
+          <p class="text-base font-bold text-white mb-2">DBA Teams</p>
+          <p class="text-xs text-gray-400 leading-relaxed">Stop switching between five different tools for the same database. Document schemas, track changes, and optimize queries from one dashboard your whole team can access.</p>
+        </div>
+        <div class="bg-gray-900 border border-gray-800 rounded-2xl p-6 card-hover">
+          <p class="text-base font-bold text-white mb-2">Development Teams</p>
+          <p class="text-xs text-gray-400 leading-relaxed">Onboard new developers faster with AI-generated table docs. Catch schema drift before it hits production. Understand ER relationships without reading 10,000 lines of migration files.</p>
+        </div>
+        <div class="bg-gray-900 border border-gray-800 rounded-2xl p-6 card-hover">
+          <p class="text-base font-bold text-white mb-2">Consultants &amp; Agencies</p>
+          <p class="text-xs text-gray-400 leading-relaxed">Deploy on a client's server, give them their own login, walk them through their database health. One install covers every client database you manage.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── vs Competitors ── -->
+  <section class="py-20 px-6 bg-gray-900/40 border-y border-gray-800/60">
+    <div class="max-w-5xl mx-auto">
+      <div class="text-center mb-10">
+        <h2 class="text-2xl font-bold text-white mb-3">How DB Hub stacks up</h2>
+        <p class="text-gray-400 text-sm">Against tools your team is probably already paying for</p>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+          <thead>
+            <tr class="border-b border-gray-800">
+              <th class="text-left py-3 px-4 text-xs text-gray-500 font-medium w-40">Feature</th>
+              <th class="text-center py-3 px-4 text-xs font-semibold text-violet-400">DB Hub</th>
+              <th class="text-center py-3 px-4 text-xs text-gray-500 font-medium">TablePlus</th>
+              <th class="text-center py-3 px-4 text-xs text-gray-500 font-medium">DBeaver</th>
+              <th class="text-center py-3 px-4 text-xs text-gray-500 font-medium">DBDiagram</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-800/60">
+            <tr>
+              <td class="py-3 px-4 text-xs text-gray-400">Multi-user / team</td>
+              <td class="py-3 px-4 text-center text-emerald-400 font-bold">✓</td>
+              <td class="py-3 px-4 text-center text-red-500 text-xs">Per-device</td>
+              <td class="py-3 px-4 text-center text-red-500 text-xs">Per-user</td>
+              <td class="py-3 px-4 text-center text-emerald-400 font-bold">✓</td>
+            </tr>
+            <tr>
+              <td class="py-3 px-4 text-xs text-gray-400">Self-hosted</td>
+              <td class="py-3 px-4 text-center text-emerald-400 font-bold">✓</td>
+              <td class="py-3 px-4 text-center text-emerald-400">✓</td>
+              <td class="py-3 px-4 text-center text-emerald-400">✓</td>
+              <td class="py-3 px-4 text-center text-red-500 text-xs">Cloud only</td>
+            </tr>
+            <tr>
+              <td class="py-3 px-4 text-xs text-gray-400">AI documentation</td>
+              <td class="py-3 px-4 text-center text-emerald-400 font-bold">✓</td>
+              <td class="py-3 px-4 text-center text-gray-600">—</td>
+              <td class="py-3 px-4 text-center text-gray-600">—</td>
+              <td class="py-3 px-4 text-center text-gray-600">—</td>
+            </tr>
+            <tr>
+              <td class="py-3 px-4 text-xs text-gray-400">Query optimizer</td>
+              <td class="py-3 px-4 text-center text-emerald-400 font-bold">✓</td>
+              <td class="py-3 px-4 text-center text-gray-600">—</td>
+              <td class="py-3 px-4 text-center text-xs text-gray-500">Partial</td>
+              <td class="py-3 px-4 text-center text-gray-600">—</td>
+            </tr>
+            <tr>
+              <td class="py-3 px-4 text-xs text-gray-400">Schema change tracker</td>
+              <td class="py-3 px-4 text-center text-emerald-400 font-bold">✓</td>
+              <td class="py-3 px-4 text-center text-gray-600">—</td>
+              <td class="py-3 px-4 text-center text-gray-600">—</td>
+              <td class="py-3 px-4 text-center text-gray-600">—</td>
+            </tr>
+            <tr>
+              <td class="py-3 px-4 text-xs text-gray-400">One-time pricing</td>
+              <td class="py-3 px-4 text-center text-emerald-400 font-bold">✓</td>
+              <td class="py-3 px-4 text-center text-xs text-gray-500">Annual</td>
+              <td class="py-3 px-4 text-center text-xs text-gray-500">Annual</td>
+              <td class="py-3 px-4 text-center text-xs text-gray-500">Monthly</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Pricing ── -->
+  <section id="pricing" class="py-24 px-6">
+    <div class="max-w-5xl mx-auto">
+      <div class="text-center mb-12">
+        <p class="text-xs font-semibold text-violet-400 uppercase tracking-widest mb-3">Pricing</p>
+        <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">Pay once. Yours forever.</h2>
+        <p class="text-gray-400 text-sm max-w-xl mx-auto">No subscriptions. No seat licenses. No renewals. Buy once and run DB Hub on your own server as long as you need it.</p>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-5 max-w-4xl mx-auto">
+
+        <!-- Starter -->
+        <div class="price-card bg-gray-900 border border-gray-800 rounded-2xl p-6 flex flex-col">
+          <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Starter</p>
+          <div class="mb-1">
+            <span class="text-4xl font-extrabold text-white">$199</span>
+            <span class="text-gray-600 text-sm ml-1">one-time</span>
+          </div>
+          <p class="text-xs text-gray-500 mb-6">1 server · up to 5 users</p>
+          <ul class="space-y-2.5 mb-8 flex-1">
+            <li class="flex items-start gap-2 text-xs text-gray-300"><span class="text-emerald-400 mt-0.5">✓</span> All 8 modules</li>
+            <li class="flex items-start gap-2 text-xs text-gray-300"><span class="text-emerald-400 mt-0.5">✓</span> PostgreSQL, SQL Server, MySQL</li>
+            <li class="flex items-start gap-2 text-xs text-gray-300"><span class="text-emerald-400 mt-0.5">✓</span> Unlimited database connections</li>
+            <li class="flex items-start gap-2 text-xs text-gray-300"><span class="text-emerald-400 mt-0.5">✓</span> Up to 5 team members</li>
+            <li class="flex items-start gap-2 text-xs text-gray-300"><span class="text-emerald-400 mt-0.5">✓</span> Email support</li>
+          </ul>
+          <a href="CHECKOUT_STARTER" class="block text-center text-sm font-semibold border border-gray-700 hover:border-gray-500 text-gray-300 hover:text-white py-3 rounded-xl transition">
+            Buy Starter
+          </a>
+        </div>
+
+        <!-- Team — popular -->
+        <div class="price-card price-popular bg-gray-900 border border-violet-700/60 rounded-2xl p-6 flex flex-col relative">
+          <div class="absolute -top-3 left-1/2 -translate-x-1/2 text-[10px] font-bold px-3 py-1 rounded-full bg-violet-600 text-white">MOST POPULAR</div>
+          <p class="text-xs font-semibold text-violet-400 uppercase tracking-wider mb-2">Team</p>
+          <div class="mb-1">
+            <span class="text-4xl font-extrabold text-white">$399</span>
+            <span class="text-gray-600 text-sm ml-1">one-time</span>
+          </div>
+          <p class="text-xs text-gray-500 mb-6">1 server · unlimited users</p>
+          <ul class="space-y-2.5 mb-8 flex-1">
+            <li class="flex items-start gap-2 text-xs text-gray-300"><span class="text-emerald-400 mt-0.5">✓</span> Everything in Starter</li>
+            <li class="flex items-start gap-2 text-xs text-gray-300"><span class="text-emerald-400 mt-0.5">✓</span> <strong class="text-white">Unlimited users</strong></li>
+            <li class="flex items-start gap-2 text-xs text-gray-300"><span class="text-emerald-400 mt-0.5">✓</span> Admin + editor + viewer roles</li>
+            <li class="flex items-start gap-2 text-xs text-gray-300"><span class="text-emerald-400 mt-0.5">✓</span> Priority email support</li>
+            <li class="flex items-start gap-2 text-xs text-gray-300"><span class="text-emerald-400 mt-0.5">✓</span> Free updates for 1 year</li>
+          </ul>
+          <a href="CHECKOUT_TEAM" class="block text-center text-sm font-semibold bg-violet-600 hover:bg-violet-500 text-white py-3 rounded-xl transition shadow-lg shadow-violet-900/40">
+            Buy Team
+          </a>
+        </div>
+
+        <!-- Business -->
+        <div class="price-card bg-gray-900 border border-gray-800 rounded-2xl p-6 flex flex-col">
+          <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Business</p>
+          <div class="mb-1">
+            <span class="text-4xl font-extrabold text-white">$699</span>
+            <span class="text-gray-600 text-sm ml-1">one-time</span>
+          </div>
+          <p class="text-xs text-gray-500 mb-6">Unlimited servers · unlimited users</p>
+          <ul class="space-y-2.5 mb-8 flex-1">
+            <li class="flex items-start gap-2 text-xs text-gray-300"><span class="text-emerald-400 mt-0.5">✓</span> Everything in Team</li>
+            <li class="flex items-start gap-2 text-xs text-gray-300"><span class="text-emerald-400 mt-0.5">✓</span> <strong class="text-white">Unlimited server deployments</strong></li>
+            <li class="flex items-start gap-2 text-xs text-gray-300"><span class="text-emerald-400 mt-0.5">✓</span> Deploy per client / per environment</li>
+            <li class="flex items-start gap-2 text-xs text-gray-300"><span class="text-emerald-400 mt-0.5">✓</span> Priority support with 48h SLA</li>
+            <li class="flex items-start gap-2 text-xs text-gray-300"><span class="text-emerald-400 mt-0.5">✓</span> Free updates for 2 years</li>
+          </ul>
+          <a href="CHECKOUT_BUSINESS" class="block text-center text-sm font-semibold border border-gray-700 hover:border-gray-500 text-gray-300 hover:text-white py-3 rounded-xl transition">
+            Buy Business
+          </a>
+        </div>
+
+      </div>
+
+      <p class="text-center text-xs text-gray-600 mt-8">All prices in USD. Instant download after purchase. 14-day refund policy if it doesn't work for you.</p>
+    </div>
+  </section>
+
+  <!-- ── FAQ ── -->
+  <section id="faq" class="py-20 px-6 bg-gray-900/40 border-t border-gray-800/60">
+    <div class="max-w-2xl mx-auto">
+      <div class="text-center mb-10">
+        <h2 class="text-2xl font-bold text-white">Frequently asked questions</h2>
+      </div>
+      <div class="space-y-5">
+        <details class="bg-gray-900 border border-gray-800 rounded-xl p-5 group">
+          <summary class="text-sm font-semibold text-white cursor-pointer list-none flex items-center justify-between">
+            What do I need to run DB Hub?
+            <svg class="w-4 h-4 text-gray-500 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg>
+          </summary>
+          <p class="text-xs text-gray-400 mt-3 leading-relaxed">A server (Linux, Windows, or Mac) with Python 3.11+ installed. DB Hub runs as a single FastAPI process — no Docker required, no external database server. A SQLite file is created automatically on first run.</p>
+        </details>
+        <details class="bg-gray-900 border border-gray-800 rounded-xl p-5 group">
+          <summary class="text-sm font-semibold text-white cursor-pointer list-none flex items-center justify-between">
+            Do I need an Anthropic API key?
+            <svg class="w-4 h-4 text-gray-500 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg>
+          </summary>
+          <p class="text-xs text-gray-400 mt-3 leading-relaxed">Only for the AI Documentation and AI Assistant modules. The other 6 modules (Schema Browser, ER Diagram, Query Optimizer, Change Tracker, Connections, Team) work with no AI key at all. When you do use AI, DB Hub uses your own key — Anthropic bills you directly at their standard rates.</p>
+        </details>
+        <details class="bg-gray-900 border border-gray-800 rounded-xl p-5 group">
+          <summary class="text-sm font-semibold text-white cursor-pointer list-none flex items-center justify-between">
+            Can I connect multiple databases at once?
+            <svg class="w-4 h-4 text-gray-500 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg>
+          </summary>
+          <p class="text-xs text-gray-400 mt-3 leading-relaxed">Yes. You can save unlimited named connections — a mix of PostgreSQL, SQL Server, and MySQL — and switch between them with a single click inside any module.</p>
+        </details>
+        <details class="bg-gray-900 border border-gray-800 rounded-xl p-5 group">
+          <summary class="text-sm font-semibold text-white cursor-pointer list-none flex items-center justify-between">
+            What's the difference between the license tiers?
+            <svg class="w-4 h-4 text-gray-500 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg>
+          </summary>
+          <p class="text-xs text-gray-400 mt-3 leading-relaxed">All tiers include all 8 modules and all 3 databases — there are no feature gates. The difference is: Starter = 1 server, up to 5 users. Team = 1 server, unlimited users. Business = unlimited servers (useful for agencies running separate installs per client or per environment).</p>
+        </details>
+        <details class="bg-gray-900 border border-gray-800 rounded-xl p-5 group">
+          <summary class="text-sm font-semibold text-white cursor-pointer list-none flex items-center justify-between">
+            Can I upgrade my license later?
+            <svg class="w-4 h-4 text-gray-500 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg>
+          </summary>
+          <p class="text-xs text-gray-400 mt-3 leading-relaxed">Yes. Email us and we'll apply your original purchase price as a credit toward the higher tier.</p>
+        </details>
+        <details class="bg-gray-900 border border-gray-800 rounded-xl p-5 group">
+          <summary class="text-sm font-semibold text-white cursor-pointer list-none flex items-center justify-between">
+            Is there a refund policy?
+            <svg class="w-4 h-4 text-gray-500 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg>
+          </summary>
+          <p class="text-xs text-gray-400 mt-3 leading-relaxed">14 days, no questions asked. If DB Hub doesn't work in your environment and we can't fix it, we'll refund you in full.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── CTA ── -->
+  <section class="py-24 px-6 text-center">
+    <div class="max-w-2xl mx-auto">
+      <h2 class="text-3xl md:text-4xl font-bold text-white mb-4 leading-tight">
+        Stop paying monthly for<br/>tools that don't talk to each other
+      </h2>
+      <p class="text-gray-400 text-sm mb-8">One platform. One login. Eight tools. All your databases. Pay once.</p>
+      <a href="#pricing" class="inline-flex items-center gap-2 bg-violet-600 hover:bg-violet-500 text-white font-semibold px-10 py-4 rounded-xl text-sm transition shadow-xl shadow-violet-900/30">
+        Get DB Hub — starts at $199
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+      </a>
+    </div>
+  </section>
+
+  <!-- ── Footer ── -->
+  <footer class="border-t border-gray-800/60 py-8 px-6">
+    <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-2">
+        <div class="w-5 h-5 rounded-md bg-gradient-to-br from-violet-500 to-indigo-600 flex items-center justify-center">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 7v10c0 2.21 3.58 4 8 4s8-1.79 8-4V7"/>
+            <path d="M4 7c0 2.21 3.58 4 8 4s8-1.79 8-4"/>
+          </svg>
+        </div>
+        <span class="text-xs text-gray-500">DB Hub v1.0 · Self-hosted database platform</span>
+      </div>
+      <div class="flex items-center gap-6 text-xs text-gray-600">
+        <a href="mailto:rajeshguntupalli59@gmail.com" class="hover:text-gray-400 transition">Support</a>
+        <a href="../docs/user-guide.html" class="hover:text-gray-400 transition">User Guide</a>
+        <span>© 2026</span>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

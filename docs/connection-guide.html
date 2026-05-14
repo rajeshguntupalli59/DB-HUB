@@ -1,0 +1,1957 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>DB Hub — Connection Setup Guide</title>
+<style>
+  :root {
+    --bg: #0b0d12;
+    --surface-1: #111318;
+    --surface-2: #181c24;
+    --surface-3: #1e2330;
+    --surface-4: #252b3a;
+    --border: #1f2535;
+    --border2: #252d40;
+    --accent: #5b6af7;
+    --accent-glow: rgba(91,106,247,0.15);
+    --text: #e8eaf2;
+    --text-muted: #6b7290;
+    --text-dim: #383f58;
+    --pg: #38bdf8;
+    --pg-bg: rgba(56,189,248,0.08);
+    --pg-border: rgba(56,189,248,0.2);
+    --mssql: #f97316;
+    --mssql-bg: rgba(249,115,22,0.08);
+    --mssql-border: rgba(249,115,22,0.2);
+    --mysql: #fbbf24;
+    --mysql-bg: rgba(251,191,36,0.08);
+    --mysql-border: rgba(251,191,36,0.2);
+    --green: #34d399;
+    --green-bg: rgba(52,211,153,0.08);
+    --green-border: rgba(52,211,153,0.2);
+    --red: #f87171;
+    --red-bg: rgba(248,113,113,0.08);
+    --red-border: rgba(248,113,113,0.2);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* ── Layout ── */
+  .layout { display: flex; min-height: 100vh; }
+
+  /* ── Sidebar ── */
+  .sidebar {
+    width: 248px;
+    background: var(--surface-1);
+    border-right: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+  }
+  .sidebar-logo {
+    padding: 20px 20px 16px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .sidebar-logo-icon {
+    width: 32px; height: 32px;
+    background: linear-gradient(135deg, var(--accent), #818cf8);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .sidebar-logo-icon svg { width: 16px; height: 16px; color: white; }
+  .sidebar-logo-text { font-size: 13px; font-weight: 700; letter-spacing: 0.05em; color: var(--text); }
+  .sidebar-logo-sub { font-size: 10px; color: var(--text-muted); margin-top: 1px; }
+  .sidebar-section { padding: 20px 12px 8px; }
+  .sidebar-section-label {
+    font-size: 9px; font-weight: 700; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--text-dim);
+    padding: 0 8px; margin-bottom: 6px;
+  }
+  .sidebar-link {
+    display: flex; align-items: center; gap: 8px;
+    padding: 7px 10px; border-radius: 8px;
+    font-size: 12px; color: var(--text-muted);
+    text-decoration: none; transition: all .15s;
+    cursor: pointer; margin-bottom: 1px;
+  }
+  .sidebar-link:hover, .sidebar-link.active { background: var(--accent-glow); color: var(--text); }
+  .sidebar-link.active { color: #a5b4fc; }
+  .sidebar-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+  .sidebar-link svg { width: 13px; height: 13px; flex-shrink: 0; }
+
+  /* ── Main content ── */
+  .main { flex: 1; overflow-y: auto; }
+  .content { max-width: 900px; margin: 0 auto; padding: 48px 40px; }
+
+  /* ── Hero ── */
+  .hero {
+    margin-bottom: 48px;
+    padding-bottom: 40px;
+    border-bottom: 1px solid var(--border);
+  }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 4px 10px; border-radius: 20px;
+    background: var(--accent-glow); border: 1px solid rgba(91,106,247,0.3);
+    font-size: 10px; font-weight: 700; letter-spacing: 0.08em;
+    text-transform: uppercase; color: #a5b4fc; margin-bottom: 16px;
+  }
+  .hero-title { font-size: 28px; font-weight: 700; color: var(--text); margin-bottom: 10px; line-height: 1.3; }
+  .hero-sub { font-size: 14px; color: var(--text-muted); max-width: 600px; }
+  .db-pills { display: flex; gap: 8px; margin-top: 20px; flex-wrap: wrap; }
+  .db-pill {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 5px 12px; border-radius: 20px;
+    font-size: 11px; font-weight: 600; letter-spacing: 0.03em;
+  }
+  .db-pill-dot { width: 7px; height: 7px; border-radius: 50%; }
+  .db-pill.pg { background: var(--pg-bg); border: 1px solid var(--pg-border); color: var(--pg); }
+  .db-pill.mssql { background: var(--mssql-bg); border: 1px solid var(--mssql-border); color: var(--mssql); }
+  .db-pill.mysql { background: var(--mysql-bg); border: 1px solid var(--mysql-border); color: var(--mysql); }
+
+  /* ── Sections ── */
+  .section { margin-bottom: 60px; }
+  .section-anchor { scroll-margin-top: 32px; }
+  .section-header { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
+  .section-num {
+    width: 28px; height: 28px; border-radius: 8px;
+    background: var(--accent-glow); border: 1px solid rgba(91,106,247,0.3);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700; color: #a5b4fc; flex-shrink: 0;
+  }
+  .section-title { font-size: 18px; font-weight: 700; color: var(--text); }
+  .section-sub { font-size: 13px; color: var(--text-muted); margin-top: 2px; }
+
+  h3 { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 10px; }
+
+  /* ── Cards ── */
+  .card {
+    background: var(--surface-1);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .card-header {
+    display: flex; align-items: center; gap: 10px;
+    padding: 14px 18px; border-bottom: 1px solid var(--border);
+  }
+  .card-body { padding: 18px; }
+  .card-title { font-size: 13px; font-weight: 600; color: var(--text); }
+  .card-sub { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+
+  /* ── Step indicators ── */
+  .steps { display: flex; flex-direction: column; gap: 0; }
+  .step-item { display: flex; gap: 16px; }
+  .step-left { display: flex; flex-direction: column; align-items: center; }
+  .step-num {
+    width: 26px; height: 26px; border-radius: 50%;
+    background: var(--accent); color: white;
+    font-size: 11px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; position: relative; z-index: 1;
+  }
+  .step-line {
+    width: 1px; flex: 1; background: var(--border2);
+    margin: 4px 0; min-height: 20px;
+  }
+  .step-content { padding: 2px 0 24px; flex: 1; }
+  .step-title { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+  .step-desc { font-size: 12px; color: var(--text-muted); line-height: 1.6; }
+
+  /* ── UI Mockups ── */
+  .mockup-wrapper {
+    margin: 20px 0;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid var(--border2);
+    background: var(--surface-2);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  }
+  .mockup-bar {
+    background: var(--surface-1);
+    border-bottom: 1px solid var(--border);
+    padding: 10px 16px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .mockup-dot { width: 10px; height: 10px; border-radius: 50%; }
+  .mockup-url {
+    flex: 1; text-align: center;
+    font-size: 10px; color: var(--text-dim);
+    font-family: monospace;
+  }
+  .mockup-body { padding: 0; }
+
+  /* ── DB Hub App Mockup ── */
+  .app-mockup { display: flex; background: var(--bg); min-height: 480px; }
+
+  .mock-sidebar {
+    width: 200px;
+    background: var(--surface-1);
+    border-right: 1px solid var(--border);
+    flex-shrink: 0;
+    padding: 16px 10px;
+  }
+  .mock-sidebar-logo {
+    display: flex; align-items: center; gap: 8px;
+    padding: 0 6px; margin-bottom: 20px;
+  }
+  .mock-logo-icon {
+    width: 26px; height: 26px;
+    background: linear-gradient(135deg, var(--accent), #818cf8);
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .mock-logo-icon svg { width: 12px; height: 12px; color: white; }
+  .mock-logo-text { font-size: 11px; font-weight: 700; letter-spacing: 0.04em; }
+  .mock-nav-label {
+    font-size: 8px; font-weight: 700; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--text-dim);
+    padding: 0 8px; margin: 12px 0 4px;
+  }
+  .mock-nav-item {
+    display: flex; align-items: center; gap: 7px;
+    padding: 6px 8px; border-radius: 7px;
+    font-size: 11px; color: var(--text-muted);
+    margin-bottom: 1px; cursor: default;
+  }
+  .mock-nav-item.active {
+    background: var(--accent-glow); color: #a5b4fc;
+  }
+  .mock-nav-dot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
+  .mock-nav-item svg { width: 11px; height: 11px; opacity: 0.7; }
+
+  .mock-main { flex: 1; padding: 24px; overflow: hidden; }
+  .mock-page-title { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+  .mock-page-sub { font-size: 11px; color: var(--text-muted); margin-bottom: 20px; }
+
+  /* ── Panel mockup (right-side drawer) ── */
+  .mock-panel {
+    width: 340px;
+    background: var(--surface-1);
+    border-left: 1px solid var(--border);
+    flex-shrink: 0;
+    display: flex; flex-direction: column;
+  }
+  .mock-panel-header {
+    padding: 14px 18px; border-bottom: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .mock-panel-title { font-size: 12px; font-weight: 600; }
+  .mock-panel-sub { font-size: 10px; color: var(--text-muted); margin-top: 2px; }
+  .mock-panel-close {
+    width: 24px; height: 24px; border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--surface-3); cursor: default;
+  }
+  .mock-panel-body { flex: 1; padding: 16px 18px; overflow: hidden; }
+  .mock-panel-footer {
+    padding: 12px 18px; border-top: 1px solid var(--border);
+    display: flex; gap: 8px;
+  }
+
+  /* Form fields */
+  .mock-label { font-size: 9px; font-weight: 600; color: var(--text-muted); margin-bottom: 4px; letter-spacing: 0.03em; }
+  .mock-field {
+    width: 100%; background: var(--surface-2); border: 1px solid var(--border2);
+    border-radius: 7px; padding: 7px 10px;
+    font-size: 11px; color: var(--text-muted);
+    margin-bottom: 10px;
+  }
+  .mock-field.active-field {
+    border-color: var(--accent);
+    color: var(--text);
+  }
+  .mock-field.placeholder { color: var(--text-dim); }
+  .mock-field-row { display: flex; gap: 8px; }
+  .mock-field-row .mock-field-wrap { flex: 1; }
+  .mock-field-wrap { display: flex; flex-direction: column; }
+  .mock-field-wrap.w-1-3 { flex: 0 0 90px; }
+
+  /* DB type selector */
+  .mock-db-types { display: grid; grid-template-columns: repeat(3,1fr); gap: 6px; margin-bottom: 12px; }
+  .mock-db-btn {
+    display: flex; align-items: center; gap: 6px;
+    padding: 7px 8px; border-radius: 8px; border: 1px solid var(--border2);
+    font-size: 10px; cursor: default; font-weight: 500;
+    color: var(--text-muted);
+  }
+  .mock-db-btn.sel-pg { background: var(--pg-bg); border-color: rgba(56,189,248,0.35); color: #7dd3fc; }
+  .mock-db-btn.sel-mssql { background: var(--mssql-bg); border-color: rgba(249,115,22,0.35); color: #fdba74; }
+  .mock-db-btn.sel-mysql { background: var(--mysql-bg); border-color: rgba(251,191,36,0.35); color: #fde68a; }
+  .mock-db-dot { width: 5px; height: 5px; border-radius: 50%; }
+
+  /* Buttons */
+  .mock-btn {
+    flex: 1; text-align: center; padding: 8px 12px;
+    border-radius: 7px; font-size: 11px; font-weight: 600; cursor: default;
+  }
+  .mock-btn.primary { background: var(--accent); color: white; }
+  .mock-btn.secondary { background: var(--surface-2); border: 1px solid var(--border2); color: var(--text-muted); }
+
+  /* Connection cards */
+  .mock-card-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 10px; }
+  .mock-conn-card {
+    background: var(--surface-1);
+    border: 1px solid var(--border);
+    border-radius: 10px; padding: 14px;
+  }
+  .mock-conn-top { display: flex; align-items: center; gap: 6px; margin-bottom: 8px; }
+  .mock-status-dot { width: 7px; height: 7px; border-radius: 50%; }
+  .mock-badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 2px 7px; border-radius: 4px;
+    font-size: 9px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+  }
+  .mock-badge.pg { background: var(--pg-bg); border: 1px solid var(--pg-border); color: var(--pg); }
+  .mock-badge.mssql { background: var(--mssql-bg); border: 1px solid var(--mssql-border); color: var(--mssql); }
+  .mock-badge.mysql { background: var(--mysql-bg); border: 1px solid var(--mysql-border); color: var(--mysql); }
+  .mock-badge-dot { width: 4px; height: 4px; border-radius: 50%; background: currentColor; }
+  .mock-conn-name { font-size: 11px; font-weight: 600; color: var(--text); }
+  .mock-conn-host { font-size: 9px; color: var(--text-dim); font-family: monospace; margin-top: 2px; }
+  .mock-test-btn {
+    width: 100%; margin-top: 10px; padding: 5px;
+    border: 1px solid var(--border2); border-radius: 6px;
+    font-size: 10px; color: var(--text-dim); text-align: center; cursor: default;
+  }
+
+  /* Result callouts */
+  .result-ok {
+    display: flex; align-items: center; gap: 8px;
+    padding: 8px 12px;
+    background: var(--green-bg); border: 1px solid var(--green-border);
+    border-radius: 8px; font-size: 11px; color: var(--green);
+    margin-top: 8px;
+  }
+  .result-ok svg { width: 13px; height: 13px; flex-shrink: 0; }
+  .result-err {
+    display: flex; align-items: flex-start; gap: 8px;
+    padding: 8px 12px;
+    background: var(--red-bg); border: 1px solid var(--red-border);
+    border-radius: 8px; font-size: 11px; color: var(--red);
+    margin-top: 8px;
+  }
+  .result-err svg { width: 13px; height: 13px; flex-shrink: 0; margin-top: 1px; }
+
+  /* ── Tables ── */
+  table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  th {
+    text-align: left; padding: 9px 14px;
+    font-size: 10px; font-weight: 700; letter-spacing: 0.07em;
+    text-transform: uppercase; color: var(--text-muted);
+    background: var(--surface-2); border-bottom: 1px solid var(--border);
+  }
+  td { padding: 10px 14px; border-bottom: 1px solid var(--border); color: var(--text); vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(255,255,255,0.01); }
+  td code, th code { background: var(--surface-3); border-radius: 4px; padding: 1px 5px; font-size: 11px; }
+
+  /* ── Alert boxes ── */
+  .alert {
+    display: flex; gap: 12px;
+    padding: 14px 16px; border-radius: 10px;
+    margin: 16px 0; font-size: 12px; line-height: 1.6;
+  }
+  .alert svg { width: 15px; height: 15px; flex-shrink: 0; margin-top: 1px; }
+  .alert-info { background: var(--accent-glow); border: 1px solid rgba(91,106,247,0.25); color: #c7d2fe; }
+  .alert-info svg { color: #818cf8; }
+  .alert-warn { background: rgba(251,191,36,0.07); border: 1px solid rgba(251,191,36,0.2); color: #fde68a; }
+  .alert-warn svg { color: var(--mysql); }
+  .alert-tip { background: var(--green-bg); border: 1px solid var(--green-border); color: #6ee7b7; }
+  .alert-tip svg { color: var(--green); }
+
+  /* ── Code block ── */
+  .code-block {
+    background: var(--surface-2); border: 1px solid var(--border2);
+    border-radius: 8px; padding: 14px 16px;
+    font-family: "Cascadia Code","Fira Code",monospace; font-size: 12px;
+    color: #a3e635; line-height: 1.7; overflow-x: auto; margin: 10px 0;
+    white-space: pre;
+  }
+  .code-comment { color: var(--text-dim); }
+  .code-kw { color: #818cf8; }
+  .code-str { color: #34d399; }
+  .code-cmd { color: #f472b6; }
+
+  /* ── Architecture diagram ── */
+  .arch-diagram {
+    background: var(--surface-2); border: 1px solid var(--border2);
+    border-radius: 12px; padding: 28px; margin: 20px 0;
+    font-size: 11px;
+  }
+  .arch-layer {
+    border: 1px dashed var(--border2); border-radius: 10px;
+    padding: 14px 18px; margin-bottom: 0; position: relative;
+  }
+  .arch-layer-label {
+    position: absolute; top: -9px; left: 14px;
+    background: var(--surface-2); padding: 0 6px;
+    font-size: 9px; font-weight: 700; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--text-dim);
+  }
+  .arch-row { display: flex; align-items: center; justify-content: center; gap: 12px; margin: 8px 0; flex-wrap: wrap; }
+  .arch-box {
+    display: flex; align-items: center; gap: 8px;
+    padding: 8px 14px; border-radius: 8px;
+    font-size: 11px; font-weight: 500;
+    border: 1px solid var(--border2);
+  }
+  .arch-box.browser { background: var(--surface-3); color: var(--text); }
+  .arch-box.server { background: var(--accent-glow); border-color: rgba(91,106,247,0.3); color: #c7d2fe; }
+  .arch-box.pgdb { background: var(--pg-bg); border-color: var(--pg-border); color: var(--pg); }
+  .arch-box.mssqldb { background: var(--mssql-bg); border-color: var(--mssql-border); color: var(--mssql); }
+  .arch-box.mysqldb { background: var(--mysql-bg); border-color: var(--mysql-border); color: var(--mysql); }
+  .arch-box svg { width: 13px; height: 13px; }
+  .arch-arrow {
+    display: flex; flex-direction: column; align-items: center; gap: 2px;
+    color: var(--text-dim); font-size: 9px; letter-spacing: 0.05em;
+  }
+  .arch-arrow-line {
+    width: 1px; height: 28px;
+    background: linear-gradient(to bottom, var(--accent), var(--border2));
+    position: relative;
+  }
+  .arch-arrow-line::after {
+    content: "▼"; position: absolute; bottom: -10px; left: 50%;
+    transform: translateX(-50%); font-size: 8px; color: var(--text-dim);
+  }
+  .arch-horiz-line {
+    height: 1px; flex: 1; max-width: 40px;
+    background: var(--border2);
+  }
+  .arch-label {
+    font-size: 9px; color: var(--text-dim); text-align: center;
+    letter-spacing: 0.06em; text-transform: uppercase;
+  }
+
+  /* ── Firewall note ── */
+  .port-table { margin: 12px 0; }
+  .port-badge {
+    display: inline-block; padding: 2px 7px; border-radius: 4px;
+    font-size: 10px; font-weight: 700; font-family: monospace;
+    background: var(--surface-3); color: var(--text);
+  }
+  .allow-badge {
+    display: inline-block; padding: 2px 7px; border-radius: 4px;
+    font-size: 10px; font-weight: 700;
+    background: var(--green-bg); border: 1px solid var(--green-border); color: var(--green);
+  }
+  .block-badge {
+    display: inline-block; padding: 2px 7px; border-radius: 4px;
+    font-size: 10px; font-weight: 700;
+    background: var(--red-bg); border: 1px solid var(--red-border); color: var(--red);
+  }
+
+  /* ── Troubleshoot ── */
+  .trouble-item {
+    background: var(--surface-1); border: 1px solid var(--border);
+    border-radius: 10px; margin-bottom: 10px; overflow: hidden;
+  }
+  .trouble-q {
+    padding: 12px 16px; font-size: 12px; font-weight: 600;
+    color: var(--text); display: flex; align-items: flex-start; gap: 8px;
+  }
+  .trouble-icon { color: var(--red); margin-top: 1px; flex-shrink: 0; }
+  .trouble-a {
+    padding: 0 16px 14px 36px; font-size: 12px; color: var(--text-muted); line-height: 1.7;
+  }
+  .trouble-a code {
+    background: var(--surface-3); border-radius: 3px;
+    padding: 1px 5px; font-size: 11px; color: #a5b4fc;
+  }
+
+  /* ── Inline tag ── */
+  .tag {
+    display: inline-block; padding: 1px 6px; border-radius: 4px;
+    font-size: 10px; font-weight: 700;
+    background: var(--surface-3); border: 1px solid var(--border2); color: var(--text-muted);
+  }
+  .tag.required { background: var(--red-bg); border-color: var(--red-border); color: var(--red); }
+  .tag.optional { background: var(--green-bg); border-color: var(--green-border); color: var(--green); }
+
+  /* ── Checklist ── */
+  .checklist { list-style: none; margin: 8px 0; }
+  .checklist li { display: flex; align-items: flex-start; gap: 8px; padding: 3px 0; font-size: 12px; color: var(--text-muted); }
+  .checklist li::before { content: "✓"; color: var(--green); font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+
+  /* ── Sticky progress bar ── */
+  .progress-bar {
+    position: fixed; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(to right, var(--accent), #818cf8);
+    z-index: 100; width: 100%;
+  }
+
+  /* ── Callout ── */
+  .callout {
+    background: var(--surface-1); border-left: 3px solid var(--accent);
+    border-radius: 0 8px 8px 0; padding: 12px 16px;
+    font-size: 12px; color: var(--text-muted); margin: 12px 0;
+  }
+  .callout strong { color: var(--text); }
+
+  /* ── Utilities ── */
+  .mt-4 { margin-top: 16px; }
+  .mt-6 { margin-top: 24px; }
+  .mb-4 { margin-bottom: 16px; }
+  .mb-6 { margin-bottom: 24px; }
+  .gap-col { display: flex; flex-direction: column; gap: 12px; }
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .label { font-size: 11px; color: var(--text-muted); }
+  .value { font-size: 12px; color: var(--text); font-weight: 500; }
+  .mono { font-family: monospace; font-size: 12px; }
+
+  @media (max-width: 768px) {
+    .layout { flex-direction: column; }
+    .sidebar { width: 100%; height: auto; position: static; }
+    .content { padding: 24px 20px; }
+    .two-col { grid-template-columns: 1fr; }
+    .app-mockup { flex-direction: column; }
+    .mock-sidebar { width: 100%; }
+    .mock-panel { width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<div class="progress-bar" style="width:100%"></div>
+
+<div class="layout">
+
+  <!-- ── Sidebar ── -->
+  <nav class="sidebar">
+    <div class="sidebar-logo">
+      <div class="sidebar-logo-icon">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="5" r="3"/><path d="M4 5h16M4 12h16M4 19h16"/><circle cx="12" cy="19" r="3"/></svg>
+      </div>
+      <div>
+        <div class="sidebar-logo-text">DB HUB</div>
+        <div class="sidebar-logo-sub">Connection Guide</div>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Getting Started</div>
+      <a class="sidebar-link active" href="#overview">
+        <svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+        Overview
+      </a>
+      <a class="sidebar-link" href="#architecture">
+        <svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+        Network Architecture
+      </a>
+      <a class="sidebar-link" href="#nav-connections">
+        <svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2v-4M9 21H5a2 2 0 01-2-2v-4m0 0h18"/></svg>
+        Opening Connections
+      </a>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Database Types</div>
+      <a class="sidebar-link" href="#postgresql">
+        <span class="sidebar-dot" style="background:#38bdf8"></span>
+        PostgreSQL
+      </a>
+      <a class="sidebar-link" href="#sqlserver">
+        <span class="sidebar-dot" style="background:#f97316"></span>
+        SQL Server
+      </a>
+      <a class="sidebar-link" href="#mysql">
+        <span class="sidebar-dot" style="background:#fbbf24"></span>
+        MySQL
+      </a>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Testing &amp; Verification</div>
+      <a class="sidebar-link" href="#test-connection">
+        <svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        Test a Connection
+      </a>
+      <a class="sidebar-link" href="#managing">
+        <svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg>
+        Managing Connections
+      </a>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Enterprise</div>
+      <a class="sidebar-link" href="#enterprise">
+        <svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        Firewall &amp; Security
+      </a>
+      <a class="sidebar-link" href="#windows-auth">
+        <svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+        Windows Auth
+      </a>
+      <a class="sidebar-link" href="#service-accounts">
+        <svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        Service Accounts
+      </a>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Help</div>
+      <a class="sidebar-link" href="#troubleshoot">
+        <svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+        Troubleshooting
+      </a>
+      <a class="sidebar-link" href="#reference">
+        <svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg>
+        Quick Reference
+      </a>
+    </div>
+  </nav>
+
+  <!-- ── Main ── -->
+  <main class="main">
+    <div class="content">
+
+      <!-- ── Hero ── -->
+      <div class="hero" id="overview">
+        <div class="hero-badge">
+          <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg>
+          Connection Setup Guide
+        </div>
+        <h1 class="hero-title">Connecting DB Hub to Your Databases</h1>
+        <p class="hero-sub">
+          Step-by-step visual guide for adding PostgreSQL, SQL Server, and MySQL connections.
+          Includes port discovery, Windows Auth, enterprise firewall setup, and troubleshooting.
+        </p>
+        <div class="db-pills">
+          <span class="db-pill pg"><span class="db-pill-dot" style="background:#38bdf8"></span> PostgreSQL 12+</span>
+          <span class="db-pill mssql"><span class="db-pill-dot" style="background:#f97316"></span> SQL Server 2016+</span>
+          <span class="db-pill mysql"><span class="db-pill-dot" style="background:#fbbf24"></span> MySQL 8.0+</span>
+        </div>
+      </div>
+
+
+      <!-- ── Section 1: Architecture ── -->
+      <div class="section section-anchor" id="architecture">
+        <div class="section-header">
+          <div class="section-num">1</div>
+          <div>
+            <div class="section-title">How DB Hub Connects to Databases</div>
+            <div class="section-sub">Understanding the network architecture before you open a connection</div>
+          </div>
+        </div>
+
+        <div class="arch-diagram">
+          <!-- Browser layer -->
+          <div class="arch-layer" style="margin-bottom:24px">
+            <span class="arch-layer-label">User's Browser (any device on your network)</span>
+            <div class="arch-row" style="margin:8px 0">
+              <div class="arch-box browser">
+                <svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+                Browser — localhost:5173
+              </div>
+              <div class="arch-box browser" style="opacity:0.6">
+                <svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><path d="M12 18h.01"/></svg>
+                Laptop / Tablet
+              </div>
+            </div>
+          </div>
+
+          <div class="arch-arrow" style="align-items:center;margin:4px 0">
+            <div class="arch-arrow-line" style="height:20px"></div>
+            <div class="arch-label">HTTP :5173 / :8000 (LAN only)</div>
+            <div style="height:12px"></div>
+          </div>
+
+          <!-- DB Hub layer -->
+          <div class="arch-layer" style="margin-bottom:24px; border-color:rgba(91,106,247,0.3)">
+            <span class="arch-layer-label" style="color:#818cf8">DB Hub Server (self-hosted, same LAN or on-prem)</span>
+            <div class="arch-row" style="margin:12px 0">
+              <div class="arch-box server">
+                <svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"/></svg>
+                FastAPI Backend — :8000
+              </div>
+              <span style="color:var(--text-dim);font-size:11px">↔</span>
+              <div class="arch-box browser">
+                <svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4"/></svg>
+                SQLite (db_hub.sqlite3)
+              </div>
+            </div>
+          </div>
+
+          <div class="arch-arrow" style="align-items:center;margin:4px 0">
+            <div class="arch-arrow-line" style="height:20px"></div>
+            <div class="arch-label">DB drivers — psycopg2 / pymssql / pymysql (LAN or internal network)</div>
+            <div style="height:12px"></div>
+          </div>
+
+          <!-- DB layer -->
+          <div class="arch-layer" style="border-color:rgba(52,211,153,0.2)">
+            <span class="arch-layer-label" style="color:#34d399">Your Databases (self-hosted, internal network)</span>
+            <div class="arch-row" style="margin:12px 0">
+              <div class="arch-box pgdb">
+                <svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7"/><ellipse cx="12" cy="7" rx="8" ry="4"/></svg>
+                PostgreSQL :5432
+              </div>
+              <div class="arch-box mssqldb">
+                <svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7"/><ellipse cx="12" cy="7" rx="8" ry="4"/></svg>
+                SQL Server :1433
+              </div>
+              <div class="arch-box mysqldb">
+                <svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7"/><ellipse cx="12" cy="7" rx="8" ry="4"/></svg>
+                MySQL :3306
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="alert alert-info">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+          <div>
+            <strong>Browser never touches the database.</strong> The DB Hub server is the only machine that opens TCP connections to your PostgreSQL/SQL Server/MySQL ports. Users' browsers only talk to DB Hub on port 8000. This is the key point to share with your security team.
+          </div>
+        </div>
+      </div>
+
+
+      <!-- ── Section 2: Open Connections page ── -->
+      <div class="section section-anchor" id="nav-connections">
+        <div class="section-header">
+          <div class="section-num">2</div>
+          <div>
+            <div class="section-title">Opening the Connections Page</div>
+            <div class="section-sub">Log in and navigate to the Connection Manager</div>
+          </div>
+        </div>
+
+        <div class="steps">
+          <div class="step-item">
+            <div class="step-left">
+              <div class="step-num">1</div>
+              <div class="step-line"></div>
+            </div>
+            <div class="step-content">
+              <div class="step-title">Log in to DB Hub</div>
+              <div class="step-desc">Open your browser and go to <strong style="color:var(--text)">http://localhost:5173</strong> (or the server IP on your network). Enter your email and password.</div>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-left">
+              <div class="step-num">2</div>
+              <div class="step-line"></div>
+            </div>
+            <div class="step-content">
+              <div class="step-title">Click Connections in the left sidebar</div>
+              <div class="step-desc">The sidebar always shows 8 modules. Click <strong style="color:var(--text)">Connections</strong> (database icon, second item under Workspace).</div>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-left">
+              <div class="step-num">3</div>
+              <div class="step-line"></div>
+            </div>
+            <div class="step-content">
+              <div class="step-title">Click "Add Connection"</div>
+              <div class="step-desc">The blue button appears in the top-right of the Connections page. Clicking it opens the connection form panel from the right.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- App mockup showing sidebar + connections page -->
+        <div class="mockup-wrapper">
+          <div class="mockup-bar">
+            <span class="mockup-dot" style="background:#f87171"></span>
+            <span class="mockup-dot" style="background:#fbbf24"></span>
+            <span class="mockup-dot" style="background:#34d399"></span>
+            <span class="mockup-url">http://localhost:5173/connections</span>
+          </div>
+          <div class="app-mockup">
+            <!-- Sidebar -->
+            <div class="mock-sidebar">
+              <div class="mock-sidebar-logo">
+                <div class="mock-logo-icon">
+                  <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="5" r="3"/><path d="M4 5h16M4 12h16M4 19h16"/><circle cx="12" cy="19" r="3"/></svg>
+                </div>
+                <div style="font-size:11px;font-weight:700;letter-spacing:.04em">DB HUB</div>
+              </div>
+              <div class="mock-nav-label">Workspace</div>
+              <div class="mock-nav-item">
+                <svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+                Dashboard
+              </div>
+              <div class="mock-nav-item active" style="background:rgba(91,106,247,.12);color:#a5b4fc">
+                <svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4"/></svg>
+                Connections
+              </div>
+              <div class="mock-nav-item">
+                <svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                Schema Browser
+              </div>
+              <div class="mock-nav-item">
+                <svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                Documentation
+              </div>
+              <div class="mock-nav-item">
+                <svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                ER Diagram
+              </div>
+              <div class="mock-nav-item">
+                <svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                Change Tracker
+              </div>
+              <div class="mock-nav-item">
+                <svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+                AI Assistant
+              </div>
+              <div class="mock-nav-item">
+                <svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"/></svg>
+                Query Optimizer
+              </div>
+            </div>
+
+            <!-- Main area -->
+            <div class="mock-main">
+              <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px">
+                <div>
+                  <div class="mock-page-title">Connections</div>
+                  <div class="mock-page-sub">Manage your database connections</div>
+                </div>
+                <div style="background:var(--accent);color:white;padding:7px 14px;border-radius:8px;font-size:11px;font-weight:600;display:flex;align-items:center;gap:6px">
+                  <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                  Add Connection
+                </div>
+              </div>
+
+              <div class="mock-card-grid">
+                <div class="mock-conn-card">
+                  <div class="mock-conn-top">
+                    <span class="mock-status-dot" style="background:#34d399"></span>
+                    <span class="mock-badge pg"><span class="mock-badge-dot"></span>PostgreSQL</span>
+                  </div>
+                  <div class="mock-conn-name">Production PG</div>
+                  <div class="mock-conn-host">10.0.1.20:5432 / appdb</div>
+                  <div class="mock-test-btn">Test Connection</div>
+                </div>
+                <div class="mock-conn-card">
+                  <div class="mock-conn-top">
+                    <span class="mock-status-dot" style="background:#34d399"></span>
+                    <span class="mock-badge mssql"><span class="mock-badge-dot"></span>SQL Server</span>
+                  </div>
+                  <div class="mock-conn-name">Analytics MSSQL</div>
+                  <div class="mock-conn-host">10.0.1.15:64950 / master</div>
+                  <div class="mock-test-btn">Test Connection</div>
+                </div>
+              </div>
+
+              <div class="mock-card-grid" style="margin-top:10px">
+                <div class="mock-conn-card">
+                  <div class="mock-conn-top">
+                    <span class="mock-status-dot" style="background:#34d399"></span>
+                    <span class="mock-badge mysql"><span class="mock-badge-dot"></span>MySQL</span>
+                  </div>
+                  <div class="mock-conn-name">Data Warehouse</div>
+                  <div class="mock-conn-host">10.0.1.25:3306 / testdb</div>
+                  <div class="mock-test-btn">Test Connection</div>
+                </div>
+                <div class="mock-conn-card" style="border-style:dashed;display:flex;align-items:center;justify-content:center;min-height:80px">
+                  <div style="text-align:center;color:var(--text-dim);font-size:11px">
+                    <div style="font-size:20px;margin-bottom:4px">+</div>
+                    Add connection
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- ── Section 3: PostgreSQL ── -->
+      <div class="section section-anchor" id="postgresql">
+        <div class="section-header">
+          <div class="section-num" style="background:var(--pg-bg);border-color:var(--pg-border)">
+            <svg width="13" height="13" fill="none" stroke="#38bdf8" stroke-width="2" viewBox="0 0 24 24"><path d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7"/><ellipse cx="12" cy="7" rx="8" ry="4"/></svg>
+          </div>
+          <div>
+            <div class="section-title" style="color:#7dd3fc">PostgreSQL Connection</div>
+            <div class="section-sub">Standard TCP auth — the simplest connection type</div>
+          </div>
+        </div>
+
+        <div class="card mb-6">
+          <div class="card-header" style="background:var(--pg-bg);border-color:var(--pg-border)">
+            <span class="mock-badge pg" style="font-size:10px"><span class="mock-badge-dot"></span>PostgreSQL</span>
+            <div>
+              <div class="card-title">Required Fields</div>
+              <div class="card-sub">Fill these in the connection form panel</div>
+            </div>
+          </div>
+          <div class="card-body" style="padding:0">
+            <table>
+              <thead>
+                <tr>
+                  <th>Field</th>
+                  <th>Example</th>
+                  <th>Notes</th>
+                  <th>Required?</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Connection Name</strong></td>
+                  <td class="mono">Production PG</td>
+                  <td>A label — shown in the sidebar</td>
+                  <td><span class="tag required">Required</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Host</strong></td>
+                  <td class="mono">localhost <br/><span style="color:var(--text-muted)">or 10.0.1.20</span></td>
+                  <td>IP or hostname of the PostgreSQL server</td>
+                  <td><span class="tag required">Required</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Port</strong></td>
+                  <td class="mono">5432</td>
+                  <td>Default 5432, auto-filled</td>
+                  <td><span class="tag required">Required</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Database</strong></td>
+                  <td class="mono">shopdb</td>
+                  <td>The logical database name to connect to</td>
+                  <td><span class="tag required">Required</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Username</strong></td>
+                  <td class="mono">dba</td>
+                  <td>PostgreSQL role name</td>
+                  <td><span class="tag required">Required</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Password</strong></td>
+                  <td>••••••••</td>
+                  <td>Stored encrypted with Fernet AES-128</td>
+                  <td><span class="tag required">Required</span></td>
+                </tr>
+                <tr>
+                  <td><strong>SSL</strong></td>
+                  <td>Off / On</td>
+                  <td>Enable for RDS, Cloud SQL, or secured on-prem</td>
+                  <td><span class="tag optional">Optional</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Mockup: PG form -->
+        <div class="mockup-wrapper">
+          <div class="mockup-bar">
+            <span class="mockup-dot" style="background:#f87171"></span>
+            <span class="mockup-dot" style="background:#fbbf24"></span>
+            <span class="mockup-dot" style="background:#34d399"></span>
+            <span class="mockup-url">DB Hub — Add Connection (PostgreSQL)</span>
+          </div>
+          <div style="display:flex">
+            <div style="flex:1;background:rgba(0,0,0,0.3);opacity:0.4"></div>
+            <div class="mock-panel" style="width:360px">
+              <div class="mock-panel-header">
+                <div>
+                  <div class="mock-panel-title">Add Connection</div>
+                  <div class="mock-panel-sub">Connect a PostgreSQL, SQL Server, or MySQL database</div>
+                </div>
+                <div class="mock-panel-close">
+                  <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
+                </div>
+              </div>
+              <div class="mock-panel-body">
+                <div class="mock-label">Database Type</div>
+                <div class="mock-db-types">
+                  <div class="mock-db-btn sel-pg">
+                    <span class="mock-db-dot" style="background:#38bdf8"></span>
+                    PostgreSQL
+                  </div>
+                  <div class="mock-db-btn">
+                    <span class="mock-db-dot" style="background:#fbbf24"></span>
+                    MySQL
+                  </div>
+                  <div class="mock-db-btn">
+                    <span class="mock-db-dot" style="background:#f97316"></span>
+                    SQL Server
+                  </div>
+                </div>
+
+                <div class="mock-label">Connection Name</div>
+                <div class="mock-field active-field">Production PG</div>
+
+                <div class="mock-field-row">
+                  <div class="mock-field-wrap">
+                    <div class="mock-label">Host</div>
+                    <div class="mock-field active-field">10.0.1.20</div>
+                  </div>
+                  <div class="mock-field-wrap w-1-3">
+                    <div class="mock-label">Port</div>
+                    <div class="mock-field active-field">5432</div>
+                  </div>
+                </div>
+
+                <div class="mock-label">Database</div>
+                <div class="mock-field active-field">shopdb</div>
+
+                <div class="mock-label">Username</div>
+                <div class="mock-field active-field">dba</div>
+
+                <div class="mock-label">Password</div>
+                <div class="mock-field active-field" style="letter-spacing:3px">••••••••</div>
+
+                <div style="display:flex;align-items:center;justify-content:space-between;padding:4px 0 8px">
+                  <div>
+                    <div style="font-size:12px;font-weight:500;color:var(--text)">Require SSL</div>
+                    <div style="font-size:10px;color:var(--text-muted)">Encrypt the connection</div>
+                  </div>
+                  <div style="width:38px;height:22px;border-radius:11px;background:var(--surface-4);position:relative">
+                    <span style="position:absolute;top:2px;left:2px;width:18px;height:18px;background:white;border-radius:50%;opacity:0.3"></span>
+                  </div>
+                </div>
+
+                <div class="result-ok">
+                  <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+                  Connected · 4ms latency
+                </div>
+              </div>
+              <div class="mock-panel-footer">
+                <div class="mock-btn secondary">Test Connection</div>
+                <div class="mock-btn primary">Add Connection</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="alert alert-tip mt-4">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+          <div>
+            Always click <strong>Test Connection</strong> before saving. A green "Connected · Xms latency" banner confirms the credentials and network path are correct.
+          </div>
+        </div>
+      </div>
+
+
+      <!-- ── Section 4: SQL Server ── -->
+      <div class="section section-anchor" id="sqlserver">
+        <div class="section-header">
+          <div class="section-num" style="background:var(--mssql-bg);border-color:var(--mssql-border)">
+            <svg width="13" height="13" fill="none" stroke="#f97316" stroke-width="2" viewBox="0 0 24 24"><path d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7"/><ellipse cx="12" cy="7" rx="8" ry="4"/></svg>
+          </div>
+          <div>
+            <div class="section-title" style="color:#fdba74">SQL Server Connection</div>
+            <div class="section-sub">Named instances, Windows Auth, and dynamic port discovery</div>
+          </div>
+        </div>
+
+        <div class="card mb-6">
+          <div class="card-header" style="background:var(--mssql-bg);border-color:var(--mssql-border)">
+            <span class="mock-badge mssql" style="font-size:10px"><span class="mock-badge-dot"></span>SQL Server</span>
+            <div>
+              <div class="card-title">Required Fields</div>
+              <div class="card-sub">Windows Auth = leave Username + Password blank</div>
+            </div>
+          </div>
+          <div class="card-body" style="padding:0">
+            <table>
+              <thead>
+                <tr>
+                  <th>Field</th>
+                  <th>SQL Auth Example</th>
+                  <th>Windows Auth Example</th>
+                  <th>Required?</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Connection Name</strong></td>
+                  <td class="mono">Analytics MSSQL</td>
+                  <td class="mono">ERP SQL Server</td>
+                  <td><span class="tag required">Required</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Host</strong></td>
+                  <td class="mono">10.0.1.15</td>
+                  <td class="mono">localhost</td>
+                  <td><span class="tag required">Required</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Port</strong></td>
+                  <td class="mono">1433 <span style="color:var(--text-muted)">(default)</span></td>
+                  <td class="mono">64950 <span style="color:var(--text-muted)">(SQLEXPRESS)</span></td>
+                  <td><span class="tag required">Required</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Database</strong></td>
+                  <td class="mono">AnalyticsDB</td>
+                  <td class="mono">master</td>
+                  <td><span class="tag required">Required</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Username</strong></td>
+                  <td class="mono">sa_reader</td>
+                  <td style="color:var(--text-muted);font-style:italic">Leave blank</td>
+                  <td><span class="tag optional">SQL Auth only</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Password</strong></td>
+                  <td>••••••••</td>
+                  <td style="color:var(--text-muted);font-style:italic">Leave blank</td>
+                  <td><span class="tag optional">SQL Auth only</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Named instance port discovery -->
+        <div class="card mb-6" id="windows-auth">
+          <div class="card-header">
+            <svg width="14" height="14" fill="none" stroke="#f97316" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+            <div>
+              <div class="card-title">Finding the Port for SQL Server Express (Named Instances)</div>
+              <div class="card-sub">SQLEXPRESS uses a dynamic port — not 1433</div>
+            </div>
+          </div>
+          <div class="card-body">
+            <p style="font-size:12px;color:var(--text-muted);margin-bottom:12px">
+              SQL Server Express installs as a <em>named instance</em> (e.g., <code>HOSTNAME\SQLEXPRESS</code>) and listens on a random TCP port assigned at install time. DB Hub needs the actual port number, not the instance name.
+            </p>
+            <h3>Step 1 — Find the port via PowerShell</h3>
+            <div class="code-block"><span class="code-comment"># Run this on the SQL Server machine</span>
+<span class="code-kw">Get-ItemProperty</span> <span class="code-str">"HKLM:\SOFTWARE\Microsoft\Microsoft SQL Server\MSSQL16.SQLEXPRESS\MSSQLServer\SuperSocketNetLib\Tcp\IPAll"</span> <span class="code-kw">|</span>
+  <span class="code-kw">Select-Object</span> TcpDynamicPorts</div>
+            <div class="callout">
+              <strong>Example output:</strong> <code style="color:#38bdf8">TcpDynamicPorts: 64950</code><br/>
+              Use this number as the <strong>Port</strong> in DB Hub.
+            </div>
+            <h3 class="mt-4">Step 2 — Make sure TCP/IP is enabled</h3>
+            <p style="font-size:12px;color:var(--text-muted);margin-bottom:8px">If the key is empty or you get "connection refused":</p>
+            <ul style="padding-left:20px;font-size:12px;color:var(--text-muted);line-height:2">
+              <li>Open <strong style="color:var(--text)">SQL Server Configuration Manager</strong></li>
+              <li>SQL Server Network Configuration → Protocols for SQLEXPRESS</li>
+              <li>Right-click <strong style="color:var(--text)">TCP/IP</strong> → Enable</li>
+              <li>Restart the SQL Server service</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Mockup: MSSQL Windows Auth form -->
+        <div class="mockup-wrapper">
+          <div class="mockup-bar">
+            <span class="mockup-dot" style="background:#f87171"></span>
+            <span class="mockup-dot" style="background:#fbbf24"></span>
+            <span class="mockup-dot" style="background:#34d399"></span>
+            <span class="mockup-url">DB Hub — Add Connection (SQL Server, Windows Auth)</span>
+          </div>
+          <div style="display:flex">
+            <div style="flex:1;background:rgba(0,0,0,0.3);opacity:0.4"></div>
+            <div class="mock-panel" style="width:360px">
+              <div class="mock-panel-header">
+                <div>
+                  <div class="mock-panel-title">Add Connection</div>
+                  <div class="mock-panel-sub">Connect a PostgreSQL, SQL Server, or MySQL database</div>
+                </div>
+                <div class="mock-panel-close">
+                  <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
+                </div>
+              </div>
+              <div class="mock-panel-body">
+                <div class="mock-label">Database Type</div>
+                <div class="mock-db-types">
+                  <div class="mock-db-btn">
+                    <span class="mock-db-dot" style="background:#38bdf8"></span>
+                    PostgreSQL
+                  </div>
+                  <div class="mock-db-btn">
+                    <span class="mock-db-dot" style="background:#fbbf24"></span>
+                    MySQL
+                  </div>
+                  <div class="mock-db-btn sel-mssql">
+                    <span class="mock-db-dot" style="background:#f97316"></span>
+                    SQL Server
+                  </div>
+                </div>
+
+                <div class="mock-label">Connection Name</div>
+                <div class="mock-field active-field">ERP SQL Server</div>
+
+                <div class="mock-field-row">
+                  <div class="mock-field-wrap">
+                    <div class="mock-label">Host</div>
+                    <div class="mock-field active-field">localhost</div>
+                    <div style="font-size:9px;color:var(--text-dim);margin-top:2px">For named instances, use actual TCP port</div>
+                  </div>
+                  <div class="mock-field-wrap w-1-3">
+                    <div class="mock-label">Port</div>
+                    <div class="mock-field active-field">64950</div>
+                  </div>
+                </div>
+
+                <div class="mock-label">Database</div>
+                <div class="mock-field active-field">master</div>
+
+                <div class="mock-label">Username <span style="color:var(--text-dim);font-weight:400">(optional — blank for Windows Auth)</span></div>
+                <div class="mock-field placeholder">Leave blank for Windows Auth</div>
+
+                <div class="mock-label">Password <span style="color:var(--text-dim);font-weight:400">(optional for Windows Auth)</span></div>
+                <div class="mock-field placeholder">Leave blank for Windows Auth</div>
+
+                <div style="margin-top:4px">
+                  <div class="result-ok">
+                    <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+                    Connected · 12ms latency
+                  </div>
+                </div>
+              </div>
+              <div class="mock-panel-footer">
+                <div class="mock-btn secondary">Test Connection</div>
+                <div class="mock-btn primary">Add Connection</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="alert alert-warn mt-4">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          <div>
+            <strong>Windows Auth identity = the DB Hub service account,</strong> not the browser user's Windows login. The backend process (uvicorn or the Windows service) must run as an account that has SQL Server access. For multi-user setups, use SQL Auth with a shared <code>dbhub_svc</code> login instead.
+          </div>
+        </div>
+      </div>
+
+
+      <!-- ── Section 5: MySQL ── -->
+      <div class="section section-anchor" id="mysql">
+        <div class="section-header">
+          <div class="section-num" style="background:var(--mysql-bg);border-color:var(--mysql-border)">
+            <svg width="13" height="13" fill="none" stroke="#fbbf24" stroke-width="2" viewBox="0 0 24 24"><path d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7"/><ellipse cx="12" cy="7" rx="8" ry="4"/></svg>
+          </div>
+          <div>
+            <div class="section-title" style="color:#fde68a">MySQL Connection</div>
+            <div class="section-sub">Standard TCP — same pattern as PostgreSQL</div>
+          </div>
+        </div>
+
+        <div class="card mb-6">
+          <div class="card-header" style="background:var(--mysql-bg);border-color:var(--mysql-border)">
+            <span class="mock-badge mysql" style="font-size:10px"><span class="mock-badge-dot"></span>MySQL</span>
+            <div>
+              <div class="card-title">Required Fields</div>
+              <div class="card-sub">MySQL 8.0+ required for EXPLAIN FORMAT=JSON</div>
+            </div>
+          </div>
+          <div class="card-body" style="padding:0">
+            <table>
+              <thead>
+                <tr>
+                  <th>Field</th>
+                  <th>Example</th>
+                  <th>Notes</th>
+                  <th>Required?</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Connection Name</strong></td>
+                  <td class="mono">Data Warehouse</td>
+                  <td>Display label</td>
+                  <td><span class="tag required">Required</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Host</strong></td>
+                  <td class="mono">localhost</td>
+                  <td>IP or hostname of MySQL server</td>
+                  <td><span class="tag required">Required</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Port</strong></td>
+                  <td class="mono">3306</td>
+                  <td>Default 3306, auto-filled</td>
+                  <td><span class="tag required">Required</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Database</strong></td>
+                  <td class="mono">testdb</td>
+                  <td>Schema name to connect to</td>
+                  <td><span class="tag required">Required</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Username</strong></td>
+                  <td class="mono">root</td>
+                  <td>MySQL user — avoid root in production</td>
+                  <td><span class="tag required">Required</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Password</strong></td>
+                  <td>••••••••</td>
+                  <td>Fernet-encrypted at rest</td>
+                  <td><span class="tag required">Required</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Mockup: MySQL form -->
+        <div class="mockup-wrapper">
+          <div class="mockup-bar">
+            <span class="mockup-dot" style="background:#f87171"></span>
+            <span class="mockup-dot" style="background:#fbbf24"></span>
+            <span class="mockup-dot" style="background:#34d399"></span>
+            <span class="mockup-url">DB Hub — Add Connection (MySQL)</span>
+          </div>
+          <div style="display:flex">
+            <div style="flex:1;background:rgba(0,0,0,0.3);opacity:0.4"></div>
+            <div class="mock-panel" style="width:360px">
+              <div class="mock-panel-header">
+                <div>
+                  <div class="mock-panel-title">Add Connection</div>
+                  <div class="mock-panel-sub">Connect a PostgreSQL, SQL Server, or MySQL database</div>
+                </div>
+                <div class="mock-panel-close">
+                  <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
+                </div>
+              </div>
+              <div class="mock-panel-body">
+                <div class="mock-label">Database Type</div>
+                <div class="mock-db-types">
+                  <div class="mock-db-btn">
+                    <span class="mock-db-dot" style="background:#38bdf8"></span>
+                    PostgreSQL
+                  </div>
+                  <div class="mock-db-btn sel-mysql">
+                    <span class="mock-db-dot" style="background:#fbbf24"></span>
+                    MySQL
+                  </div>
+                  <div class="mock-db-btn">
+                    <span class="mock-db-dot" style="background:#f97316"></span>
+                    SQL Server
+                  </div>
+                </div>
+
+                <div class="mock-label">Connection Name</div>
+                <div class="mock-field active-field">Data Warehouse</div>
+
+                <div class="mock-field-row">
+                  <div class="mock-field-wrap">
+                    <div class="mock-label">Host</div>
+                    <div class="mock-field active-field">localhost</div>
+                  </div>
+                  <div class="mock-field-wrap w-1-3">
+                    <div class="mock-label">Port</div>
+                    <div class="mock-field active-field">3306</div>
+                  </div>
+                </div>
+
+                <div class="mock-label">Database</div>
+                <div class="mock-field active-field">testdb</div>
+
+                <div class="mock-label">Username</div>
+                <div class="mock-field active-field">dbhub_svc</div>
+
+                <div class="mock-label">Password</div>
+                <div class="mock-field active-field" style="letter-spacing:3px">••••••••</div>
+
+                <div style="margin-top:12px">
+                  <div class="result-ok">
+                    <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+                    Connected · 3ms latency
+                  </div>
+                </div>
+              </div>
+              <div class="mock-panel-footer">
+                <div class="mock-btn secondary">Test Connection</div>
+                <div class="mock-btn primary">Add Connection</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- ── Section 6: Test a Connection ── -->
+      <div class="section section-anchor" id="test-connection">
+        <div class="section-header">
+          <div class="section-num">6</div>
+          <div>
+            <div class="section-title">Testing a Connection</div>
+            <div class="section-sub">Verify network path and credentials before saving</div>
+          </div>
+        </div>
+
+        <p style="font-size:13px;color:var(--text-muted);margin-bottom:20px">
+          The Test Connection button opens a temporary connection to the server without saving anything. It returns the exact latency in milliseconds and the full error message if it fails.
+        </p>
+
+        <div class="two-col">
+          <div class="card">
+            <div class="card-header" style="background:var(--green-bg);border-color:var(--green-border)">
+              <svg width="14" height="14" fill="none" stroke="#34d399" stroke-width="2" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+              <div class="card-title" style="color:var(--green)">Successful Test</div>
+            </div>
+            <div class="card-body">
+              <div class="result-ok" style="margin-top:0">
+                <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+                Connected · 4ms latency
+              </div>
+              <ul class="checklist mt-4">
+                <li>Host resolves and TCP port is reachable</li>
+                <li>Credentials are valid</li>
+                <li>Database name exists and account can access it</li>
+                <li>SSL negotiation succeeded (if enabled)</li>
+              </ul>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header" style="background:var(--red-bg);border-color:var(--red-border)">
+              <svg width="14" height="14" fill="none" stroke="#f87171" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+              <div class="card-title" style="color:var(--red)">Failed Test</div>
+            </div>
+            <div class="card-body">
+              <div class="result-err" style="margin-top:0">
+                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+                Connection refused (port 1433)
+              </div>
+              <ul style="padding-left:20px;font-size:12px;color:var(--text-muted);margin-top:14px;line-height:2">
+                <li>Check host IP and port number</li>
+                <li>Verify firewall allows DB Hub server → DB port</li>
+                <li>Ensure SQL Server TCP/IP is enabled</li>
+                <li>Confirm database name spelling</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="alert alert-info mt-4">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+          <div>
+            After saving, you can test any existing connection from its card on the Connections page using the <strong>Test Connection</strong> button. The result (✓ / ✗ and timestamp) is stored and shown on the card.
+          </div>
+        </div>
+      </div>
+
+
+      <!-- ── Section 7: Managing ── -->
+      <div class="section section-anchor" id="managing">
+        <div class="section-header">
+          <div class="section-num">7</div>
+          <div>
+            <div class="section-title">Managing Saved Connections</div>
+            <div class="section-sub">Edit, re-test, and delete connections</div>
+          </div>
+        </div>
+
+        <div class="mockup-wrapper">
+          <div class="mockup-bar">
+            <span class="mockup-dot" style="background:#f87171"></span>
+            <span class="mockup-dot" style="background:#fbbf24"></span>
+            <span class="mockup-dot" style="background:#34d399"></span>
+            <span class="mockup-url">DB Hub — Connection Card (hover state)</span>
+          </div>
+          <div style="padding:24px;background:var(--bg);display:flex;gap:16px;flex-wrap:wrap">
+            <!-- Card with edit/delete revealed -->
+            <div style="width:260px;background:var(--surface-1);border:1px solid var(--border2);border-radius:12px;padding:16px">
+              <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px">
+                <div>
+                  <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px">
+                    <span class="mock-status-dot" style="background:#34d399"></span>
+                    <span class="mock-badge pg"><span class="mock-badge-dot"></span>PostgreSQL</span>
+                  </div>
+                  <div style="font-size:12px;font-weight:600;color:var(--text)">Production PG</div>
+                  <div style="font-size:10px;color:var(--text-dim);font-family:monospace;margin-top:2px">10.0.1.20:5432 / shopdb</div>
+                </div>
+                <!-- Action buttons (hover state) -->
+                <div style="display:flex;gap:4px">
+                  <div style="width:26px;height:26px;border-radius:6px;background:var(--surface-3);display:flex;align-items:center;justify-content:center">
+                    <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                  </div>
+                  <div style="width:26px;height:26px;border-radius:6px;background:var(--red-bg);border:1px solid var(--red-border);display:flex;align-items:center;justify-content:center">
+                    <svg width="11" height="11" fill="none" stroke="#f87171" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/></svg>
+                  </div>
+                </div>
+              </div>
+              <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text-dim);margin-bottom:12px">
+                <span>User: <span style="color:var(--text-muted)">dba</span></span>
+                <span style="color:var(--green)">✓ May 14, 10:22</span>
+              </div>
+              <div class="mock-test-btn" style="text-align:center">Test Connection</div>
+            </div>
+
+            <!-- Labels -->
+            <div style="display:flex;flex-direction:column;justify-content:center;gap:20px;font-size:11px;color:var(--text-muted)">
+              <div style="display:flex;align-items:center;gap:8px">
+                <span style="width:8px;height:8px;border-radius:50%;background:#34d399;display:block"></span>
+                <strong style="color:var(--text)">Green dot</strong> — last test passed
+              </div>
+              <div style="display:flex;align-items:center;gap:8px">
+                <div style="width:26px;height:26px;border-radius:6px;background:var(--surface-3);display:flex;align-items:center;justify-content:center">
+                  <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                </div>
+                <strong style="color:var(--text)">Edit icon</strong> — open form to change host/port/creds
+              </div>
+              <div style="display:flex;align-items:center;gap:8px">
+                <div style="width:26px;height:26px;border-radius:6px;background:var(--red-bg);border:1px solid var(--red-border);display:flex;align-items:center;justify-content:center">
+                  <svg width="11" height="11" fill="none" stroke="#f87171" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/></svg>
+                </div>
+                <strong style="color:var(--text)">Delete icon</strong> — permanently remove (confirm dialog)
+              </div>
+              <div style="display:flex;align-items:center;gap:8px;font-size:11px">
+                <span style="color:var(--green)">✓ May 14, 10:22</span>
+                <strong style="color:var(--text)">Timestamp</strong> — when last tested
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="alert alert-info mt-4">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+          <div>
+            When editing a connection, leave the <strong>Password</strong> field blank to keep the existing encrypted password. Only enter a new password if you're rotating credentials.
+          </div>
+        </div>
+      </div>
+
+
+      <!-- ── Section 8: Enterprise ── -->
+      <div class="section section-anchor" id="enterprise">
+        <div class="section-header">
+          <div class="section-num">8</div>
+          <div>
+            <div class="section-title">Enterprise Firewall &amp; Security</div>
+            <div class="section-sub">What to open, what to keep closed, and how to talk to your security team</div>
+          </div>
+        </div>
+
+        <div class="card mb-6">
+          <div class="card-header">
+            <svg width="14" height="14" fill="none" stroke="#818cf8" stroke-width="1.8" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            <div class="card-title">Firewall Rules Required</div>
+          </div>
+          <div class="card-body" style="padding:0">
+            <table class="port-table">
+              <thead>
+                <tr>
+                  <th>Source</th>
+                  <th>Destination</th>
+                  <th>Port</th>
+                  <th>Protocol</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>User browsers (LAN)</td>
+                  <td>DB Hub server</td>
+                  <td><span class="port-badge">5173</span> or <span class="port-badge">3000</span></td>
+                  <td>TCP</td>
+                  <td><span class="allow-badge">ALLOW</span></td>
+                </tr>
+                <tr>
+                  <td>User browsers (LAN)</td>
+                  <td>DB Hub server</td>
+                  <td><span class="port-badge">8000</span></td>
+                  <td>TCP</td>
+                  <td><span class="allow-badge">ALLOW</span></td>
+                </tr>
+                <tr>
+                  <td>DB Hub server</td>
+                  <td>PostgreSQL server</td>
+                  <td><span class="port-badge">5432</span></td>
+                  <td>TCP</td>
+                  <td><span class="allow-badge">ALLOW</span></td>
+                </tr>
+                <tr>
+                  <td>DB Hub server</td>
+                  <td>SQL Server</td>
+                  <td><span class="port-badge">1433</span> or dynamic</td>
+                  <td>TCP</td>
+                  <td><span class="allow-badge">ALLOW</span></td>
+                </tr>
+                <tr>
+                  <td>DB Hub server</td>
+                  <td>MySQL server</td>
+                  <td><span class="port-badge">3306</span></td>
+                  <td>TCP</td>
+                  <td><span class="allow-badge">ALLOW</span></td>
+                </tr>
+                <tr>
+                  <td>User browsers</td>
+                  <td>PostgreSQL server</td>
+                  <td><span class="port-badge">5432</span></td>
+                  <td>TCP</td>
+                  <td><span class="block-badge">BLOCK</span></td>
+                </tr>
+                <tr>
+                  <td>User browsers</td>
+                  <td>SQL Server</td>
+                  <td><span class="port-badge">1433</span></td>
+                  <td>TCP</td>
+                  <td><span class="block-badge">BLOCK</span></td>
+                </tr>
+                <tr>
+                  <td>User browsers</td>
+                  <td>MySQL server</td>
+                  <td><span class="port-badge">3306</span></td>
+                  <td>TCP</td>
+                  <td><span class="block-badge">BLOCK</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="callout">
+          <strong>What to tell your security team:</strong> "DB Hub is a self-hosted internal web app that runs on our own server. User browsers connect only to DB Hub on port 8000/5173 — they never directly access database ports. The DB Hub server is the only machine that opens connections to PostgreSQL, SQL Server, and MySQL. You only need to allow DB Hub's server IP through to those DB ports, which is the same as giving any application server access."
+        </div>
+      </div>
+
+
+      <!-- ── Section 9: Service Accounts ── -->
+      <div class="section section-anchor" id="service-accounts">
+        <div class="section-header">
+          <div class="section-num">9</div>
+          <div>
+            <div class="section-title">Creating a DB Hub Service Account</div>
+            <div class="section-sub">Minimal-privilege read accounts for production databases</div>
+          </div>
+        </div>
+
+        <div class="alert alert-warn">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          <div>
+            <strong>Never use a superuser/root/sa account in production.</strong> Create a dedicated <code>dbhub_svc</code> account with only the permissions DB Hub needs: read on tables and catalog views.
+          </div>
+        </div>
+
+        <!-- PostgreSQL -->
+        <div class="mt-6">
+          <h3 style="font-size:13px;color:#7dd3fc;display:flex;align-items:center;gap:8px">
+            <span class="mock-db-dot" style="background:#38bdf8;width:8px;height:8px"></span>
+            PostgreSQL — Create <code>dbhub_svc</code>
+          </h3>
+          <div class="code-block"><span class="code-comment">-- 1. Create login</span>
+<span class="code-kw">CREATE USER</span> dbhub_svc <span class="code-kw">WITH PASSWORD</span> <span class="code-str">'StrongPass123!'</span>;
+
+<span class="code-comment">-- 2. Grant read access on all tables</span>
+<span class="code-kw">GRANT CONNECT ON DATABASE</span> shopdb <span class="code-kw">TO</span> dbhub_svc;
+<span class="code-kw">GRANT USAGE ON SCHEMA</span> public <span class="code-kw">TO</span> dbhub_svc;
+<span class="code-kw">GRANT SELECT ON ALL TABLES IN SCHEMA</span> public <span class="code-kw">TO</span> dbhub_svc;
+<span class="code-kw">ALTER DEFAULT PRIVILEGES IN SCHEMA</span> public
+  <span class="code-kw">GRANT SELECT ON TABLES TO</span> dbhub_svc;
+
+<span class="code-comment">-- 3. Grant catalog access for Schema Browser &amp; Index Advisor</span>
+<span class="code-kw">GRANT SELECT ON</span> pg_stat_user_tables, pg_stat_user_indexes,
+  pg_indexes, pg_stat_statements <span class="code-kw">TO</span> dbhub_svc;</div>
+        </div>
+
+        <!-- SQL Server -->
+        <div class="mt-6">
+          <h3 style="font-size:13px;color:#fdba74;display:flex;align-items:center;gap:8px">
+            <span class="mock-db-dot" style="background:#f97316;width:8px;height:8px"></span>
+            SQL Server — Create <code>dbhub_svc</code> (SQL Auth)
+          </h3>
+          <div class="code-block"><span class="code-comment">-- 1. Create server login</span>
+<span class="code-kw">CREATE LOGIN</span> dbhub_svc <span class="code-kw">WITH PASSWORD</span> = <span class="code-str">'StrongPass123!'</span>;
+
+<span class="code-comment">-- 2. Create user in target database</span>
+<span class="code-kw">USE</span> AnalyticsDB;
+<span class="code-kw">CREATE USER</span> dbhub_svc <span class="code-kw">FOR LOGIN</span> dbhub_svc;
+
+<span class="code-comment">-- 3. Read-only access</span>
+<span class="code-kw">EXEC</span> sp_addrolemember <span class="code-str">'db_datareader'</span>, <span class="code-str">'dbhub_svc'</span>;
+
+<span class="code-comment">-- 4. Grant DMV access for Slow Query &amp; Index Advisor</span>
+<span class="code-kw">GRANT VIEW SERVER STATE TO</span> dbhub_svc;
+<span class="code-kw">GRANT VIEW DATABASE STATE TO</span> dbhub_svc;</div>
+        </div>
+
+        <!-- MySQL -->
+        <div class="mt-6">
+          <h3 style="font-size:13px;color:#fde68a;display:flex;align-items:center;gap:8px">
+            <span class="mock-db-dot" style="background:#fbbf24;width:8px;height:8px"></span>
+            MySQL — Create <code>dbhub_svc</code>
+          </h3>
+          <div class="code-block"><span class="code-comment">-- Replace 10.0.1.10 with your DB Hub server's IP</span>
+<span class="code-kw">CREATE USER</span> <span class="code-str">'dbhub_svc'</span>@<span class="code-str">'10.0.1.10'</span>
+  <span class="code-kw">IDENTIFIED BY</span> <span class="code-str">'StrongPass123!'</span>;
+
+<span class="code-comment">-- Read access on target schema</span>
+<span class="code-kw">GRANT SELECT ON</span> testdb.<span class="code-kw">*</span> <span class="code-kw">TO</span> <span class="code-str">'dbhub_svc'</span>@<span class="code-str">'10.0.1.10'</span>;
+
+<span class="code-comment">-- Grant performance_schema access for Slow Query module</span>
+<span class="code-kw">GRANT SELECT ON</span> performance_schema.<span class="code-kw">*</span>
+  <span class="code-kw">TO</span> <span class="code-str">'dbhub_svc'</span>@<span class="code-str">'10.0.1.10'</span>;
+
+<span class="code-kw">FLUSH PRIVILEGES</span>;</div>
+        </div>
+      </div>
+
+
+      <!-- ── Section 10: Troubleshooting ── -->
+      <div class="section section-anchor" id="troubleshoot">
+        <div class="section-header">
+          <div class="section-num">10</div>
+          <div>
+            <div class="section-title">Troubleshooting Failed Connections</div>
+            <div class="section-sub">Common errors and how to fix them</div>
+          </div>
+        </div>
+
+        <div class="trouble-item">
+          <div class="trouble-q">
+            <svg class="trouble-icon" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+            <span>"Connection refused" or "could not connect to server"</span>
+          </div>
+          <div class="trouble-a">
+            The DB Hub server cannot reach the database host on that port. Check: (1) is the host IP correct? (2) is the database service running? (3) does the firewall allow DB Hub server → database port? Run <code>Test-NetConnection 10.0.1.20 -Port 5432</code> from the DB Hub server to diagnose.
+          </div>
+        </div>
+
+        <div class="trouble-item">
+          <div class="trouble-q">
+            <svg class="trouble-icon" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+            <span>SQL Server: "Connection refused on port 1433"</span>
+          </div>
+          <div class="trouble-a">
+            SQLEXPRESS uses a dynamic port (not 1433). Find the port: <code>Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\Microsoft SQL Server\MSSQL16.SQLEXPRESS\MSSQLServer\SuperSocketNetLib\Tcp\IPAll" | Select TcpDynamicPorts</code>. Use that port number in the Port field. Also ensure TCP/IP is enabled in SQL Server Configuration Manager.
+          </div>
+        </div>
+
+        <div class="trouble-item">
+          <div class="trouble-q">
+            <svg class="trouble-icon" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+            <span>"password authentication failed for user"</span>
+          </div>
+          <div class="trouble-a">
+            The credentials are wrong, or the user doesn't exist on that database. Verify you can log in with the same user/password from another tool (psql, SSMS, MySQL Workbench). For PostgreSQL, check <code>pg_hba.conf</code> allows connections from the DB Hub server's IP.
+          </div>
+        </div>
+
+        <div class="trouble-item">
+          <div class="trouble-q">
+            <svg class="trouble-icon" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+            <span>SQL Server Windows Auth: "Login failed for user ''"</span>
+          </div>
+          <div class="trouble-a">
+            Windows Auth uses the identity of the process running DB Hub (the uvicorn/service account). That account must have a SQL Server login with access to the database. Either grant that account access, or switch to SQL Auth with a dedicated login.
+          </div>
+        </div>
+
+        <div class="trouble-item">
+          <div class="trouble-q">
+            <svg class="trouble-icon" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+            <span>MySQL: "Host '...' is not allowed to connect to this MySQL server"</span>
+          </div>
+          <div class="trouble-a">
+            The MySQL user was created with a specific host restriction. Use <code>CREATE USER 'user'@'%'</code> to allow any host, or specify the exact DB Hub server IP: <code>'user'@'10.0.1.10'</code>. Run <code>FLUSH PRIVILEGES</code> after changing grants.
+          </div>
+        </div>
+
+        <div class="trouble-item">
+          <div class="trouble-q">
+            <svg class="trouble-icon" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+            <span>All modules work but Slow Query shows no data</span>
+          </div>
+          <div class="trouble-a">
+            The account needs access to monitoring views. For PostgreSQL: <code>GRANT SELECT ON pg_stat_statements TO dbhub_svc</code>. For SQL Server: <code>GRANT VIEW SERVER STATE TO dbhub_svc</code>. For MySQL: <code>GRANT SELECT ON performance_schema.* TO dbhub_svc</code>.
+          </div>
+        </div>
+
+        <div class="trouble-item">
+          <div class="trouble-q">
+            <svg class="trouble-icon" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+            <span>DB Hub shows "401 Unauthorized" on API calls</span>
+          </div>
+          <div class="trouble-a">
+            Your session token has expired (24-hour lifetime). Log out and log back in. This is a DB Hub session issue, not a database credential issue.
+          </div>
+        </div>
+      </div>
+
+
+      <!-- ── Section 11: Reference ── -->
+      <div class="section section-anchor" id="reference">
+        <div class="section-header">
+          <div class="section-num">11</div>
+          <div>
+            <div class="section-title">Quick Reference</div>
+            <div class="section-sub">Default ports and connection settings at a glance</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-body" style="padding:0">
+            <table>
+              <thead>
+                <tr>
+                  <th>Database</th>
+                  <th>Driver</th>
+                  <th>Default Port</th>
+                  <th>Auth Options</th>
+                  <th>Min Version</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><span class="mock-badge pg"><span class="mock-badge-dot"></span>PostgreSQL</span></td>
+                  <td class="mono">psycopg2-binary</td>
+                  <td><span class="port-badge">5432</span></td>
+                  <td>Username + Password</td>
+                  <td>PostgreSQL 12+</td>
+                </tr>
+                <tr>
+                  <td><span class="mock-badge mssql"><span class="mock-badge-dot"></span>SQL Server</span></td>
+                  <td class="mono">pymssql</td>
+                  <td><span class="port-badge">1433</span> <span style="color:var(--text-muted);font-size:11px">(or dynamic)</span></td>
+                  <td>SQL Auth or Windows Auth</td>
+                  <td>SQL Server 2016+</td>
+                </tr>
+                <tr>
+                  <td><span class="mock-badge mysql"><span class="mock-badge-dot"></span>MySQL</span></td>
+                  <td class="mono">pymysql</td>
+                  <td><span class="port-badge">3306</span></td>
+                  <td>Username + Password</td>
+                  <td>MySQL 8.0+</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="card mt-4">
+          <div class="card-header">
+            <div class="card-title">Permissions Required per Module</div>
+          </div>
+          <div class="card-body" style="padding:0">
+            <table>
+              <thead>
+                <tr>
+                  <th>Module</th>
+                  <th>PostgreSQL</th>
+                  <th>SQL Server</th>
+                  <th>MySQL</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Schema Browser</td>
+                  <td>USAGE on schema</td>
+                  <td>db_datareader</td>
+                  <td>SELECT on schema</td>
+                </tr>
+                <tr>
+                  <td>Documentation</td>
+                  <td>SELECT on tables</td>
+                  <td>db_datareader</td>
+                  <td>SELECT on tables</td>
+                </tr>
+                <tr>
+                  <td>ER Diagram</td>
+                  <td>SELECT on information_schema</td>
+                  <td>db_datareader</td>
+                  <td>SELECT on information_schema</td>
+                </tr>
+                <tr>
+                  <td>Change Tracker</td>
+                  <td>SELECT on information_schema</td>
+                  <td>db_datareader</td>
+                  <td>SELECT on information_schema</td>
+                </tr>
+                <tr>
+                  <td>AI Assistant</td>
+                  <td>SELECT on tables</td>
+                  <td>db_datareader</td>
+                  <td>SELECT on tables</td>
+                </tr>
+                <tr>
+                  <td>EXPLAIN Visualizer</td>
+                  <td>EXPLAIN privilege</td>
+                  <td>SET SHOWPLAN_ALL ON</td>
+                  <td>SELECT on schema</td>
+                </tr>
+                <tr>
+                  <td>Index Advisor</td>
+                  <td>SELECT on pg_stat_user_indexes</td>
+                  <td>VIEW SERVER STATE</td>
+                  <td>SELECT on information_schema</td>
+                </tr>
+                <tr>
+                  <td>Slow Query Dashboard</td>
+                  <td>SELECT on pg_stat_statements</td>
+                  <td>VIEW SERVER STATE</td>
+                  <td>SELECT on performance_schema</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Footer -->
+        <div style="margin-top:48px;padding-top:24px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center">
+          <div>
+            <div style="font-size:11px;color:var(--text-muted)">DB Hub — Connection Setup Guide</div>
+            <div style="font-size:10px;color:var(--text-dim);margin-top:2px">Last updated: May 2026 · v1.0</div>
+          </div>
+          <div style="display:flex;gap:12px">
+            <a href="user-guide.html" style="font-size:11px;color:#818cf8;text-decoration:none">User Guide →</a>
+            <a href="test-report.html" style="font-size:11px;color:#818cf8;text-decoration:none">Test Report →</a>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /content -->
+  </main>
+</div><!-- /layout -->
+
+<script>
+  // Active sidebar link tracking
+  const links = document.querySelectorAll('.sidebar-link');
+  const sections = [];
+  document.querySelectorAll('.section-anchor').forEach(s => {
+    const id = s.getAttribute('id');
+    if (id) sections.push({ id, el: s });
+  });
+  // hero
+  sections.unshift({ id: 'overview', el: document.getElementById('overview') });
+
+  function updateActive() {
+    let current = sections[0].id;
+    sections.forEach(s => {
+      if (window.scrollY + 120 >= s.el.offsetTop) current = s.id;
+    });
+    links.forEach(link => {
+      link.classList.toggle('active', link.getAttribute('href') === '#' + current);
+    });
+  }
+  window.addEventListener('scroll', updateActive, { passive: true });
+  updateActive();
+
+  // Smooth scroll
+  links.forEach(link => {
+    link.addEventListener('click', e => {
+      const href = link.getAttribute('href');
+      if (href && href.startsWith('#')) {
+        e.preventDefault();
+        const target = document.getElementById(href.slice(1));
+        if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
+</script>
+</body>
+</html>
