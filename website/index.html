@@ -65,20 +65,26 @@
         <span class="text-xs text-violet-300 font-medium">Self-hosted · One-time price · Your servers, your data</span>
       </div>
       <h1 class="text-5xl md:text-6xl font-extrabold tracking-tight mb-6 leading-tight">
-        Every DBA tool your team<br />
-        <span class="gradient-text">needs in one platform</span>
+        Find the query killing<br />
+        <span class="gradient-text">your database in 60 seconds</span>
       </h1>
       <p class="text-lg text-gray-400 max-w-2xl mx-auto mb-10 leading-relaxed">
-        DB Hub is a self-hosted database management platform with <strong class="text-gray-200">8 professional modules</strong> — schema browsing, AI documentation, ER diagrams, query optimization, change tracking, and more — supporting <strong class="text-gray-200">PostgreSQL, SQL Server, and MySQL</strong> under one roof.
+        DB Hub is a self-hosted platform with <strong class="text-gray-200">8 professional modules</strong> — EXPLAIN visualizer, index advisor, schema browser, AI docs, ER diagrams, change tracker, and more — for <strong class="text-gray-200">PostgreSQL, SQL Server, and MySQL</strong>. One install, one login, everything your team needs.
       </p>
       <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
         <a href="#pricing" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-violet-600 hover:bg-violet-500 text-white font-semibold px-8 py-3.5 rounded-xl text-sm transition shadow-lg shadow-violet-900/40">
           Buy once, use forever
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
         </a>
-        <a href="#modules" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 border border-gray-700 hover:border-gray-500 text-gray-300 hover:text-white font-medium px-8 py-3.5 rounded-xl text-sm transition">
-          See all 8 modules
+        <a href="#demo" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 border border-gray-700 hover:border-gray-500 text-gray-300 hover:text-white font-medium px-8 py-3.5 rounded-xl text-sm transition">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
+          Watch demo
         </a>
+      </div>
+      <!-- Guarantee badge -->
+      <div class="mt-6 inline-flex items-center gap-2 text-xs text-gray-500">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        <span>30-day money-back guarantee — no questions asked</span>
       </div>
 
       <!-- Stats row -->
@@ -94,6 +100,46 @@
         <div class="text-center">
           <p class="text-2xl font-bold text-white">$0</p>
           <p class="text-xs text-gray-500 mt-1">Monthly fees</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Demo Video ── -->
+  <section id="demo" class="py-20 px-6 border-t border-gray-800/60">
+    <div class="max-w-4xl mx-auto text-center">
+      <p class="text-xs font-semibold text-violet-400 uppercase tracking-widest mb-3">See it in action</p>
+      <h2 class="text-2xl font-bold text-white mb-4">Watch DB Hub find a slow query — live</h2>
+      <p class="text-gray-400 text-sm mb-8 max-w-xl mx-auto">Paste a query → EXPLAIN shows a Sequential Scan → Index Advisor generates the fix → execution time drops from 8s to 180ms. 3 minutes.</p>
+      <!-- Video embed placeholder — swap src with real Loom/YouTube embed URL -->
+      <div class="relative mx-auto max-w-3xl rounded-2xl overflow-hidden border border-gray-800 bg-gray-900 aspect-video flex items-center justify-center group cursor-pointer" onclick="this.innerHTML='<iframe class=\'w-full h-full absolute inset-0\' src=\'DEMO_VIDEO_URL?autoplay=1\' frameborder=\'0\' allowfullscreen></iframe>'">
+        <div class="absolute inset-0 bg-gradient-to-br from-violet-900/20 to-indigo-900/20"></div>
+        <div class="relative flex flex-col items-center gap-4">
+          <div class="w-16 h-16 rounded-full bg-violet-600/80 border border-violet-500 flex items-center justify-center group-hover:bg-violet-500 transition shadow-xl shadow-violet-900/40">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="white" stroke="none"><polygon points="8 5 19 12 8 19 8 5"/></svg>
+          </div>
+          <p class="text-sm text-gray-300 font-medium">Watch the 3-minute demo</p>
+          <p class="text-xs text-gray-600">Slow query diagnosis · Index advisor · EXPLAIN visualizer</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── ROI Callout ── -->
+  <section class="py-10 px-6 bg-violet-950/20 border-y border-violet-800/20">
+    <div class="max-w-4xl mx-auto">
+      <div class="grid md:grid-cols-3 gap-6 text-center">
+        <div class="p-4">
+          <p class="text-2xl font-extrabold text-white mb-1">8s → 180ms</p>
+          <p class="text-xs text-gray-400">Typical slow query improvement after adding the index DB Hub recommends</p>
+        </div>
+        <div class="p-4 border-x border-violet-800/20">
+          <p class="text-2xl font-extrabold text-white mb-1">60 seconds</p>
+          <p class="text-xs text-gray-400">To find your worst-performing query using the slow query dashboard</p>
+        </div>
+        <div class="p-4">
+          <p class="text-2xl font-extrabold text-white mb-1">$199 once</p>
+          <p class="text-xs text-gray-400">vs $2,000+/year for SolarWinds DPA — same diagnostics, your own server</p>
         </div>
       </div>
     </div>
@@ -503,6 +549,11 @@
         <p class="text-xs font-semibold text-violet-400 uppercase tracking-widest mb-3">Pricing</p>
         <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">Pay once. Yours forever.</h2>
         <p class="text-gray-400 text-sm max-w-xl mx-auto">No subscriptions. No seat licenses. No renewals. Buy once and run DB Hub on your own server as long as you need it.</p>
+        <!-- Price anchor -->
+        <div class="mt-6 inline-flex items-center gap-3 bg-gray-900 border border-gray-800 rounded-xl px-5 py-3 text-xs text-gray-400">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="m2 17 10 5 10-5"/><path d="m2 12 10 5 10-5"/></svg>
+          <span>SolarWinds DPA starts at <strong class="text-red-400 line-through">$2,000/year</strong> · Datadog Database Monitoring: <strong class="text-red-400 line-through">$70/host/month</strong> · DB Hub: <strong class="text-emerald-400">$199 one time</strong></span>
+        </div>
       </div>
 
       <div class="grid md:grid-cols-3 gap-5 max-w-4xl mx-auto">
@@ -570,7 +621,24 @@
 
       </div>
 
-      <p class="text-center text-xs text-gray-600 mt-8">All prices in USD. Instant download after purchase. 14-day refund policy if it doesn't work for you.</p>
+      <!-- Guarantee callout -->
+      <div class="mt-10 flex flex-col sm:flex-row items-center justify-center gap-6">
+        <div class="flex items-center gap-3 bg-emerald-950/30 border border-emerald-800/30 rounded-xl px-5 py-3">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          <div class="text-left">
+            <p class="text-xs font-semibold text-emerald-400">30-day money-back guarantee</p>
+            <p class="text-xs text-gray-500">If it doesn't work in your environment, full refund. No questions.</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-3 bg-gray-900 border border-gray-800 rounded-xl px-5 py-3">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          <div class="text-left">
+            <p class="text-xs font-semibold text-white">Instant download</p>
+            <p class="text-xs text-gray-500">License key delivered immediately after purchase.</p>
+          </div>
+        </div>
+      </div>
+      <p class="text-center text-xs text-gray-600 mt-5">All prices in USD · One-time payment · No renewals required</p>
     </div>
   </section>
 
@@ -631,9 +699,10 @@
   <section class="py-24 px-6 text-center">
     <div class="max-w-2xl mx-auto">
       <h2 class="text-3xl md:text-4xl font-bold text-white mb-4 leading-tight">
-        Stop paying monthly for<br/>tools that don't talk to each other
+        Your DBA team deserves tools<br/>that actually run on your servers
       </h2>
-      <p class="text-gray-400 text-sm mb-8">One platform. One login. Eight tools. All your databases. Pay once.</p>
+      <p class="text-gray-400 text-sm mb-3">One platform. One login. Eight tools. All your databases. Pay once.</p>
+      <p class="text-xs text-gray-600 mb-8">30-day guarantee · No subscription · No data leaves your network</p>
       <a href="#pricing" class="inline-flex items-center gap-2 bg-violet-600 hover:bg-violet-500 text-white font-semibold px-10 py-4 rounded-xl text-sm transition shadow-xl shadow-violet-900/30">
         Get DB Hub — starts at $199
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
@@ -654,7 +723,7 @@
         <span class="text-xs text-gray-500">DB Hub v1.0 · Self-hosted database platform</span>
       </div>
       <div class="flex items-center gap-6 text-xs text-gray-600">
-        <a href="mailto:rajeshguntupalli59@gmail.com" class="hover:text-gray-400 transition">Support</a>
+        <a href="mailto:queryoptimizer78@gmail.com" class="hover:text-gray-400 transition">Support</a>
         <a href="../docs/user-guide.html" class="hover:text-gray-400 transition">User Guide</a>
         <span>© 2026</span>
       </div>
